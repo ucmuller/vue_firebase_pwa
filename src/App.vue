@@ -1,54 +1,60 @@
 <template>
   <div id="app">
-    <header>
-      <span>Vue.js PWA</span>
-    </header>
-    <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
-      <router-view></router-view>
-    </main>
+    <!-- <img src="./assets/logo.png"> -->
+    <Drawer class="header"/>
+    <transition name="component-fade" mode="out-in">
+      <router-view class="main"/>
+    </transition>
+    <bottom-bar class="footer"/>
   </div>
 </template>
 
 <script>
+import Drawer from '@/components/common/Drawer'
+import BottomBar from '@/components/common/BottomBar'
 export default {
-  name: 'app'
+  name: 'App',
+  components:{
+    Drawer,
+    BottomBar
+  }
 }
 </script>
 
-<style>
-body {
-  margin: 0;
-}
 
+<style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-main {
   text-align: center;
-  margin-top: 40px;
+  color: #442c2e;
+  padding-top: 0px;
+  overflow: hidden;
+  background: #fff;
 }
 
-header {
-  margin: 0;
-  height: 56px;
-  padding: 0 16px 0 24px;
-  background-color: #35495E;
-  color: #ffffff;
+.main{
+  /* margin-top: 55px; */
+  /* margin-bottom: 50px; */
 }
-
-header span {
-  display: block;
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: .02em;
-  font-weight: 400;
-  box-sizing: border-box;
-  padding-top: 16px;
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .2s ease;
+}
+.component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+}
+.md-button.md-theme-default.md-raised:not([disabled]).md-accent {
+    color: white;
+}
+.md-field.md-theme-default:before {
+    background-color: #F8F2E3;
+    background-color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused label {
+    color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused > .md-icon {
+    color: var(--md-theme-default-accent, #FB6359);
 }
 </style>
