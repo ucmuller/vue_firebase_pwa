@@ -51,7 +51,7 @@ export default {
   },
   created: function(){
     Firebase.onAuth()
-    if(this.$store.getters.user){
+    if(this.$store.getters.userStatus){
       this.$router.push('/usertop')
     }
   },

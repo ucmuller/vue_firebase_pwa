@@ -79,6 +79,8 @@
 import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
 import router from '@/router'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'InviteForm',
   data() {
@@ -89,7 +91,7 @@ export default {
         time:'',
         guestName:'',
         people:'',
-        shopName: ''
+        shopName: this.$store.getters.user.shopName
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -112,13 +114,10 @@ export default {
     console.log(this.userStatus)
   },
   computed: {
-    user() {
-      this.shopName = this.$store.getters.user.shopName
-      return this.$store.getters.user;
-    },
-    userStatus() {
-      return this.$store.getters.isSignedIn;
-    }
+    ...mapGetters({
+      userStatus: 'isSignedIn',
+      user: 'user'
+    })
   },
   methods: {
     logout() {

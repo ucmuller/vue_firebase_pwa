@@ -11,17 +11,19 @@ import InvitePageUpdate from '@/components/pages/invite/InvitePageUpdate'
 import ReservationPage from '@/components/pages/reservation/ReservationPage'
 import InviteList from '@/components/pages/invite/InviteList'
 import ReservationList from '@/components/pages/reservation/ReservationList'
+import AdminTop from '@/components/pages/admin/AdminTop'
+import StaffList from '@/components/pages/admin/StaffList'
+import InviteData from '@/components/pages/admin/InviteData'
+import ReservationData from '@/components/pages/admin/ReservationData'
+import IndividualInviteData from '@/components/pages/admin/IndividualInviteData'
+import IndividualReservationData from '@/components/pages/admin/IndividualReservationData'
 import firebase from 'firebase'
 
 Vue.use(Router)
-
+Vue.component('router-link', Vue.options.components.RouterLink);
 let router =  new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '*',
-    //   redirect: 'signin'
-    // },
     {
       path: '/usertop',
       name: 'UserTop',
@@ -33,6 +35,25 @@ let router =  new Router({
       name: 'UserUpdate',
       component: UserUpdate,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/admintop',
+      component: AdminTop,
+      // meta: { requiresAuth: true },
+      children: [
+        {
+          path: 'stafflist',
+          component: StaffList,
+        },
+        {
+          path: 'invitedata',
+          component: InviteData,
+        },
+        {
+          path: 'ReservationData',
+          component: ReservationData,
+        },
+      ]
     },
     {
       path: '/signup',
@@ -93,6 +114,22 @@ let router =  new Router({
       path: '/reservationpage/:id',
       name: 'ReservationPage',
       component: ReservationPage,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/IndividualInviteData/:id',
+      name: 'IndividualInviteData',
+      component: IndividualInviteData,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/IndividualReservationData/:id',
+      name: 'IndividualReservationData',
+      component: IndividualReservationData,
       props: route => ({
         id: Number(route.params.id)
       })
