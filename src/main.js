@@ -14,6 +14,8 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css' 
 import { OAuth } from 'oauthio-web'
 import './assets/css/theme.scss'
+import Vuelidate from 'vuelidate'
+
 
 
 
@@ -21,7 +23,7 @@ import './assets/css/theme.scss'
 
 Vue.use(Vuetify)
 Vue.use(VueMaterial)
-
+Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
 
