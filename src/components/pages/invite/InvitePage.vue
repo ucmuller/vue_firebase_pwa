@@ -6,7 +6,8 @@
   <md-card class="md-card" v-if="dataStatus">
     <md-card-area md-inset>
       <md-card-media md-ratio="16:9">
-        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <!-- <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House"> -->
+        <img :src="shopImageURL" alt="Coffee House">
       </md-card-media>
 
       <md-card-header>
@@ -84,7 +85,7 @@ export default {
       shopName: '',
       staffName: '',
       id: this.$route.params.id,
-      photoURL: '',
+      // shopImageURL: '',
       date:'',
       email:'',
       guestName:'',
@@ -98,7 +99,8 @@ export default {
 
   created: function(){
     Firebase.onAuth()
-    this.loadingOverlay()
+    // this.getShopImageURL()
+    // this.loadingOverlay()
     this.getInviteEachData()
     console.log(document.domain == "localhost")
   },
@@ -110,10 +112,10 @@ export default {
       console.log(domain)
       if(domain == "localhost"){
         // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?代行で予約しておいたので、予約内容の確認だけお願いします。　　　　　　　　　　　　【予約代行完了|ランデブー】%0D%0Ahttp://localhost:8080/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.$store.getters.inviteData.lineMesseage}%0D%0Ahttp://localhost:8080/invitepage/${this.id}`
       } else {
         // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?代行で予約しておいたので、予約内容の確認だけお願いします。　　　　　　　　　　　　【予約代行完了|ランデブー】%0D%0Ahttps://${domain}/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.$store.getters.inviteData.lineMesseage}%0D%0Ahttps://${domain}/invitepage/${this.id}`
       }
     },
     getEachData() {
@@ -143,6 +145,11 @@ export default {
           value: this.$store.getters.inviteData.tel,
           icon: 'phone_in_talk'
         },
+        {
+          text: 'LINEメッセージ',
+          value: this.$store.getters.inviteData.lineMesseage,
+          icon: 'message'
+        },
       ]
       return datas
     },
@@ -151,7 +158,9 @@ export default {
       userStatus: 'isSignedIn',
       user: 'user',
       inviteData: 'inviteData',
-    })
+      shopImageURL: 'shopImageURL'
+    }),
+
   },
 
   watch: {
@@ -185,6 +194,10 @@ export default {
     },
     launchLine(){
     location.href = this.url;
+    },
+    getShopImageURL(){
+      console.log(this.$store.getters.user.shopImage)
+      Firebase.getShopImageURL(this.$store.getters.user.shopImage)
     }
   }
 }

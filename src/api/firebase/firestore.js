@@ -5,6 +5,8 @@ import router from '@/router'
 import firebaseConfig from './firebaseConfig'
 import types from '@/store/mutation-types';
 import '@/api/firebase/firebase'
+import Firebase from '@/api/firebase/Firebase'
+
 
 
 
@@ -38,9 +40,11 @@ export default {
             'name': data.name,
             'shopName': data.shopName,
             'messeage': data.messeage,
+            'shopImage': firebase.auth().currentUser.uid + data.shopImage.name,
         }, { merge: true })
         .then(function() {
-            console.log("changeStaffData: success");
+            Firebase.uploadShopImage(data.shopImage)
+            console.log("changeStaffData: success",data.shopImage);
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);
@@ -59,6 +63,7 @@ export default {
             'staffName': user.name,
             'inviteFlag': true,
             'messeage': user.messeage,
+            'lineMesseage': data.lineMesseage,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -179,7 +184,7 @@ export default {
             // console.log("getStaffEachData:", doc.data(),staffId)
             store.dispatch('onAuth', doc.data())
         }).catch(function(error) {
-            console.log("Error getting document:", error)
+            console.log("Error getting document:", error, staffId)
         });
     },
 

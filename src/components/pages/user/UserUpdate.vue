@@ -23,6 +23,12 @@
                 <md-input v-model="datas.messeage"></md-input>
               </div>
             </md-field>
+            <v-input prepend-icon="image">
+              <label class="photo-label" for="file_photo">
+                <input id="file_photo" @change="selectFile" type="file" name="file" style="display:none;">
+                <div id="errArea"> {{ infoMsg }}</div>
+              </label>
+            </v-input>
           </md-card-header>
           <md-button class="md-raised md-accent" @click="changeStaffProfile">変更</md-button>
           <md-button class="md-raised md-primary" @click="routerPush('/usertop')">キャンセル</md-button>
@@ -46,11 +52,14 @@ export default {
         shopName: this.$store.getters.user.shopName,
         name: this.$store.getters.user.name,
         messeage: this.$store.getters.user.messeage,
+        shopImage: null,
       },
       email:'',
       password:'',
       photoURL:'',
-      updateStatus: false
+      updateStatus: false,
+      infoMsg:'＋写真を選択',
+
     }
   },
 
@@ -85,11 +94,18 @@ export default {
       this.$router.push(router)
     },
     changeStaffProfile(){
+      // console.log(this.user.staff_uid,this.datas)
       Firebase.changeStaffProfile(this.user.staff_uid, this.datas)
-      console.log(this.user.staff_uid,this.datas)
+      console.log(this.datas.shopImage)
       this.$router.push("/usertop")
-
-    }
+    },
+    selectFile: function (e) {
+      e.preventDefault();
+      let files = e.target.files;
+      this.datas.shopImage = files[0];
+      console.log(files[0])
+      this.infoMsg = this.datas.shopImage.name
+    },
   }
 }
 </script>
@@ -112,5 +128,12 @@ input{
 }
 .md-button.md-theme-default.md-raised:not([disabled]).md-accent {
   color: white;
+}
+
+.photo-label {
+  color: white;  
+  background-color: #AAA;
+  padding: 6px;
+  border-radius: 12px;
 }
 </style>

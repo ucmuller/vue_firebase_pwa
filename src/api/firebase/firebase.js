@@ -47,6 +47,8 @@ export default {
   },
 
   login(email,password){
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(function() {
     firebase.auth().signInWithEmailAndPassword(email,password)
     .then(currentUser => {
       Firestore.getStaffEachData(currentUser.user.uid)
@@ -55,8 +57,26 @@ export default {
     (err) => {
       // alert("もう一度正しく入力してください。")
       router.push('/')
-    }
-    ) 
+    }) 
+    // return firebase.auth().signInWithEmailAndPassword(email, password);
+  })
+  .catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+  });
+
+
+
+    // firebase.auth().signInWithEmailAndPassword(email,password)
+    // .then(currentUser => {
+    //   Firestore.getStaffEachData(currentUser.user.uid)
+    //   router.push('/usertop')
+    // },
+    // (err) => {
+    //   // alert("もう一度正しく入力してください。")
+    //   router.push('/')
+    // }) 
   },
 
   logout(){
@@ -69,10 +89,9 @@ export default {
   onAuth(){
     firebase.auth().onAuthStateChanged(user => {
     let userData = user ? user : {};
-    // console.log(user)
+    console.log(userData.uid)
     Firestore.getStaffEachData(userData.uid)
     this.getImageURL(user.photoURL)
-
     });
   },
 
@@ -80,6 +99,14 @@ export default {
     let uid = firebase.auth().currentUser.uid;
     // console.log('upload: success', firebase.auth().currentUser.uid)
     firebase.storage().ref().child('user/'+ uid + uploadFile.name).put(uploadFile).then(function (snapshot) {
+    console.log('Uploaded a file!',snapshot);
+    });
+  },
+
+  uploadShopImage(uploadFile) {
+    let uid = firebase.auth().currentUser.uid;
+    // console.log('upload: success', firebase.auth().currentUser.uid)
+    firebase.storage().ref().child('shop/'+ uid + uploadFile.name).put(uploadFile).then(function (snapshot) {
     console.log('Uploaded a file!',snapshot);
     });
   },
@@ -92,6 +119,15 @@ export default {
   });
   },
 
+  getShopImageURL(uploadFile){
+    console.log('koko')
+    firebase.storage().ref().child('shop/' + uploadFile).getDownloadURL().then((url) => {
+      store.dispatch('getShopImageURL', url);
+      console.log(url)
+      return url;
+  });
+  },
+
   addUserDate(data){
     firebase.auth().currentUser.updateProfile({
       displayName: data.name,
@@ -100,6 +136,7 @@ export default {
   },
 
   changeStaffProfile(uid, data){
+    console.log(firebase.auth())
     firebase.auth().currentUser.updateProfile({
       displayName: data.name,
     }).then(function() {

@@ -8,7 +8,8 @@ import types from '../mutation-types'
 const state = {
   user: null,
   status: false,
-  imageURL: ''
+  imageURL: '',
+  shopImageURL: ''
 }
 
 const mutations = {
@@ -20,7 +21,10 @@ const mutations = {
   },
   [types.USER_ONUSERIMAGECHANGED](state, imageURL) {
     state.imageURL = imageURL;
-  }
+  },
+  [types.USER_ONUSERSHOPIMAGECHANGED](state, shopImageURL) {
+    state.shopImageURL = shopImageURL;
+  },
 }
 
 const getters = {
@@ -32,7 +36,10 @@ const getters = {
   },
   imageURL(state){
     return state.imageURL
-  }
+  },
+  // shopImageURL(state){
+  //   return state.shopImageURL
+  // },
 }
 
 const actions = {
@@ -43,6 +50,9 @@ const actions = {
   getImageURL({ commit }, imageURL){
     commit(types.USER_ONUSERIMAGECHANGED, imageURL);
   },
+  // getShopImageURL({ commit }, shopImageURL){
+  //   commit(types.USER_ONUSERSHOPIMAGECHANGED, shopImageURL);
+  // },
   logout({ commit }, status){
     commit(types.USER_ONUSERSTATUSCHANGED, status);
   }

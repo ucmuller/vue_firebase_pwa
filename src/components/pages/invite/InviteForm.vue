@@ -60,6 +60,10 @@
             <label>TEL</label>
             <md-input v-model="data.tel"></md-input>
           </md-field>
+          <md-field>
+            <label>メッセージ</label>
+            <md-textarea v-model="data.lineMesseage"></md-textarea>
+          </md-field>
           </div>
         </div>
       </md-card-content>
@@ -89,7 +93,8 @@ export default {
         time:'',
         guestName:'',
         people:'',
-        shopName: ''
+        shopName: '',
+        lineMesseage: ''
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -152,6 +157,10 @@ a {
 }
 .md-field{
   height: 10px;
+  margin-bottom: 10px;
+}
+.md-has-textarea{
+  height: 150px;
   margin-bottom: 10px;
 }
 
