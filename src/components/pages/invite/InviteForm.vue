@@ -2,7 +2,8 @@
   <md-card class="md-card" v-if="userStatus">
       <md-card-area md-inset>
         <md-card-media md-ratio="16:9">
-          <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+          <img v-if="data.shopImageURL_1" :src="data.shopImageURL_1" alt="Coffee House">
+          <img v-else src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
         </md-card-media>
 
         <!-- <md-card-header>
@@ -83,6 +84,8 @@
 import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
 import router from '@/router'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'InviteForm',
   data() {
@@ -94,7 +97,9 @@ export default {
         guestName:'',
         people:'',
         shopName: '',
-        lineMesseage: ''
+        lineMesseage: '',
+        shopImageURL_1: this.$store.getters.shopImageURL
+
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -114,16 +119,15 @@ export default {
   },
   created: function(){
     Firebase.onAuth()
+    this.getShopImageURL()
     console.log(this.userStatus)
   },
   computed: {
-    user() {
-      this.shopName = this.$store.getters.user.shopName
-      return this.$store.getters.user;
-    },
-    userStatus() {
-      return this.$store.getters.isSignedIn;
-    }
+    ...mapGetters({
+      userStatus: 'isSignedIn',
+      user: 'user',
+      shopImageURL: 'shopImageURL'
+    }),
   },
   methods: {
     logout() {
@@ -133,6 +137,10 @@ export default {
       Firestore.saveInviteData(this.user, this.data)
       console.log(this.$store.getters.user.shopName)
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
+    },
+    getShopImageURL(){
+      console.log(this.$store.getters.user.shopImageURL_1)
+      Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
     }
   }
 }

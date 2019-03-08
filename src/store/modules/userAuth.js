@@ -37,9 +37,9 @@ const getters = {
   imageURL(state){
     return state.imageURL
   },
-  // shopImageURL(state){
-  //   return state.shopImageURL
-  // },
+  shopImageURL(state){
+    return state.shopImageURL
+  },
 }
 
 const actions = {
@@ -50,9 +50,9 @@ const actions = {
   getImageURL({ commit }, imageURL){
     commit(types.USER_ONUSERIMAGECHANGED, imageURL);
   },
-  // getShopImageURL({ commit }, shopImageURL){
-  //   commit(types.USER_ONUSERSHOPIMAGECHANGED, shopImageURL);
-  // },
+  getShopImageURL({ commit }, shopImageURL){
+    commit(types.USER_ONUSERSHOPIMAGECHANGED, shopImageURL);
+  },
   logout({ commit }, status){
     commit(types.USER_ONUSERSTATUSCHANGED, status);
   }

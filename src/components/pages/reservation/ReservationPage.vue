@@ -6,7 +6,8 @@
   <md-card class="md-card" v-if="dataStatus">
     <md-card-area md-inset>
       <md-card-media md-ratio="16:9">
-        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <img v-if="!reservationData.shopImageURL_1" src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <img v-if="reservationData.shopImageURL_1" :src="reservationData.shopImageURL_1" alt="Coffee House">
       </md-card-media>
 
       <md-card-header>

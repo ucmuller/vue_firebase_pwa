@@ -6,8 +6,8 @@
   <md-card class="md-card" v-if="dataStatus">
     <md-card-area md-inset>
       <md-card-media md-ratio="16:9">
-        <!-- <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House"> -->
-        <img :src="shopImageURL" alt="Coffee House">
+        <img v-if="!inviteData.shopImageURL_1" src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <img v-if="inviteData.shopImageURL_1" :src="inviteData.shopImageURL_1" alt="Coffee House">
       </md-card-media>
 
       <md-card-header>
@@ -59,9 +59,6 @@
         md-title="予約を確定しました。"
         md-content="ご来店お待ちしております。" />
   </md-card>
-  <div class="loading-overlay" v-if="loading">
-    <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
-  </div>
 </div>
 </template>
 
@@ -70,27 +67,22 @@
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
-import OAuth from "@/components/OAuth";
+// import OAuth from "@/components/OAuth";
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'UserPage',
-
-  components: {
-    OAuth
-  },
 
   data(){
     return {
       shopName: '',
       staffName: '',
       id: this.$route.params.id,
-      // shopImageURL: '',
       date:'',
       email:'',
       guestName:'',
       people:'',
-      datas: null,
+      datas: '',
       alert: false,
       inviteFlag: true,
       loading: false,
@@ -107,7 +99,6 @@ export default {
 
   computed: {
     url(){
-      
       let domain = document.domain
       console.log(domain)
       if(domain == "localhost"){
@@ -156,7 +147,7 @@ export default {
     ...mapGetters({
       dataStatus: 'inviteDataStatus',
       userStatus: 'isSignedIn',
-      user: 'user',
+      // user: 'user',
       inviteData: 'inviteData',
       shopImageURL: 'shopImageURL'
     }),
@@ -195,10 +186,9 @@ export default {
     launchLine(){
     location.href = this.url;
     },
-    getShopImageURL(){
-      console.log(this.$store.getters.user.shopImage)
-      Firebase.getShopImageURL(this.$store.getters.user.shopImage)
-    }
+    // getShopImageURL(){
+    //   Firebase.getShopImageURL(this.$store.getters.inviteData.shopImageURL_1)
+    // }
   }
 }
 </script>

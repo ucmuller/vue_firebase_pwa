@@ -5,7 +5,7 @@ import router from '@/router'
 import firebaseConfig from './firebaseConfig'
 import types from '@/store/mutation-types';
 import '@/api/firebase/firebase'
-import Firebase from '@/api/firebase/Firebase'
+import Firebase from '@/api/firebase/firebase'
 
 
 
@@ -36,19 +36,19 @@ export default {
     },
 
     changeStaffData(uid, data){
-        firestore.collection("staff").doc(uid).set({
-            'name': data.name,
-            'shopName': data.shopName,
-            'messeage': data.messeage,
-            'shopImage': firebase.auth().currentUser.uid + data.shopImage.name,
-        }, { merge: true })
-        .then(function() {
-            Firebase.uploadShopImage(data.shopImage)
-            console.log("changeStaffData: success",data.shopImage);
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
+            firestore.collection("staff").doc(uid).set({
+                'name': data.name,
+                'shopName': data.shopName,
+                'messeage': data.messeage,
+                'shopImageURL_1': data.shopImageURL_1.name ? firebase.auth().currentUser.uid + data.shopImageURL_1.name : data.shopImageName_1,
+            }, { merge: true })
+            .then(function() {
+                Firebase.uploadShopImage(data.shopImageURL_1)
+                console.log("changeStaffData: success",data.shopImageURL_1);
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
     },
 
     saveInviteData(user, data){
@@ -60,6 +60,7 @@ export default {
             'people': data.people,
             'tel': data.tel,
             'shopName': user.shopName,
+            'shopImageURL_1': data.shopImageURL_1,
             'staffName': user.name,
             'inviteFlag': true,
             'messeage': user.messeage,
@@ -100,6 +101,7 @@ export default {
             'tel': data.tel,
             'inviteId': inviteId,
             'reservationFlag': true,
+            'shopImageURL_1': data.shopImageURL_1,
             'staffName': data.staffName,
             'shopName': data.shopName,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()

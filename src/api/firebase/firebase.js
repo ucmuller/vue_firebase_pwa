@@ -120,7 +120,6 @@ export default {
   },
 
   getShopImageURL(uploadFile){
-    console.log('koko')
     firebase.storage().ref().child('shop/' + uploadFile).getDownloadURL().then((url) => {
       store.dispatch('getShopImageURL', url);
       console.log(url)
@@ -136,7 +135,6 @@ export default {
   },
 
   changeStaffProfile(uid, data){
-    console.log(firebase.auth())
     firebase.auth().currentUser.updateProfile({
       displayName: data.name,
     }).then(function() {
