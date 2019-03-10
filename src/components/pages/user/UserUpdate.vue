@@ -92,6 +92,7 @@ export default {
     },
     shopImageURL() {
       this.datas.shopImageURL_1 = this.$store.getters.shopImageURL
+      this.getShopImageURL()
       console.log("shopImage更新");
     },
 

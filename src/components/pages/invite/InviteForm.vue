@@ -129,6 +129,13 @@ export default {
       shopImageURL: 'shopImageURL'
     }),
   },
+  watch: {
+    shopImageURL() {
+      this.data.shopImageURL_1 = this.$store.getters.shopImageURL
+      this.getShopImageURL()
+      console.log("shopImage更新");
+    },
+  },
   methods: {
     logout() {
       Firebase.logout();

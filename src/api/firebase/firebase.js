@@ -103,10 +103,12 @@ export default {
     });
   },
 
+
   uploadShopImage(uploadFile) {
     let uid = firebase.auth().currentUser.uid;
     // console.log('upload: success', firebase.auth().currentUser.uid)
-    firebase.storage().ref().child('shop/'+ uid + uploadFile.name).put(uploadFile).then(function (snapshot) {
+    firebase.storage().ref().child('shop/'+ uid + uploadFile.name).put(uploadFile)
+    .then(function (snapshot) {
     console.log('Uploaded a file!',snapshot);
     });
   },
