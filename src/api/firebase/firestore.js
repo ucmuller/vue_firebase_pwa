@@ -129,7 +129,7 @@ export default {
     },
 
     getInviteData(uid){
-        firestore.collection("invite").get().then(function(querySnapshot) {
+        firestore.collection("invite").onSnapshot(function(querySnapshot) {
             let inviteDataArray = []
             let TrueFlagInviteDataArray = []
             querySnapshot.forEach(function(doc) {
@@ -147,7 +147,8 @@ export default {
                         'tel': doc.data().tel,
                         'inviteFlag': doc.data().inviteFlag,
                         'staffName': doc.data().staffName,
-                        'createdAt': doc.data().createdAt
+                        'createdAt': doc.data().createdAt,
+                        'shopName': doc.data().shopName
                     }
                     inviteDataArray.push(data);
                 }
@@ -171,7 +172,7 @@ export default {
     },
 
     getInviteEachData(inviteId){
-        firestore.collection("invite").get().then(function(querySnapshot) {
+        firestore.collection("invite").onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 if(inviteId == doc.id){
                     store.dispatch('inviteDataChanged', doc.data())
@@ -182,11 +183,9 @@ export default {
     },
     
     getStaffEachData(staffId){
-        firestore.collection("staff").doc(staffId).get().then(function(doc) {
+        firestore.collection("staff").doc(staffId).onSnapshot(function(doc) {
             // console.log("getStaffEachData:", doc.data(),staffId)
             store.dispatch('onAuth', doc.data())
-        }).catch(function(error) {
-            console.log("Error getting document:", error, staffId)
         });
     },
 
@@ -203,7 +202,7 @@ export default {
     },
 
     getReservationData(uid){
-        firestore.collection("reservation").get().then(function(querySnapshot) {
+        firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let reservationDataArray = []
             querySnapshot.forEach(function(doc) {
                 if(uid == doc.data().from_uid){
@@ -218,7 +217,8 @@ export default {
                         'tel': doc.data().tel,
                         'reservationFlag': doc.data().reservationFlag,
                         'staffName': doc.data().staffName,
-                        'createdAt': doc.data().createdAt
+                        'createdAt': doc.data().createdAt,
+                        'shopName': doc.data().shopName
                     }
                     reservationDataArray.push(data);
                     reservationDataArray.sort(function(a,b){
@@ -238,7 +238,7 @@ export default {
     },
 
     getReservationEachData(reservationId){
-        firestore.collection("reservation").get().then(function(querySnapshot) {
+        firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 if(reservationId == doc.id){
                     store.dispatch('reservationDataChanged', doc.data())
@@ -246,6 +246,106 @@ export default {
                 }
             });
         })
+    },
+
+
+    fetchAllStaffData(){
+        firestore.collection("staff").onSnapshot(function(querySnapshot) {
+            let allStaffDataArray = []
+            querySnapshot.forEach(function(doc) {
+                allStaffDataArray.push(doc.data());
+            });
+            console.log(allStaffDataArray)
+            store.dispatch('fetchAllStaffData', allStaffDataArray)
+        })
+    },
+
+    fetchAllInviteData(){
+        firestore.collection("invite").onSnapshot(function(querySnapshot) {
+            let allInviteDataArray = []
+            querySnapshot.forEach(function(doc) {
+                allInviteDataArray.push(doc.data());
+            });
+            console.log(allInviteDataArray)
+            store.dispatch('fetchAllInviteData', allInviteDataArray)
+        })
+    },
+
+    fetchAllReservationData(){
+        firestore.collection("reservation").onSnapshot(function(querySnapshot) {
+            let allReservationDataArray = []
+            querySnapshot.forEach(function(doc) {
+                allReservationDataArray.push(doc.data());
+            });
+            console.log(allReservationDataArray)
+            store.dispatch('fetchAllReservationData', allReservationDataArray)
+        })
+    },
+    getIndividualInviteData(uid){
+        firestore.collection("invite").onSnapshot(function(querySnapshot) {
+            let inviteDataArray = []
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                // console.log(doc.id, " => ", doc.data().from_uid);
+                if(uid == doc.data().from_uid){
+                    let data = {
+                        'date': doc.data().date,
+                        'email': doc.data().email,
+                        'inviteID': doc.id,
+                        'time': doc.data().time,
+                        'from_uid': doc.data().from_uid,
+                        'guestName': doc.data().guestName,
+                        'people': doc.data().people,
+                        'tel': doc.data().tel,
+                        'inviteFlag': doc.data().inviteFlag,
+                        'staffName': doc.data().staffName,
+                        'createdAt': doc.data().createdAt,
+                        'shopName': doc.data().shopName
+                    }
+                    inviteDataArray.push(data);
+                }
+                inviteDataArray.sort(function(a,b){
+                    if(a.createdAt < b.createdAt) return -1;
+                    if(a.createdAt > b.createdAt) return 1;
+                    return 0;
+                });
+
+            });
+            store.dispatch('dataChanged', inviteDataArray)            // console.log("inviteDataArray",TrueFlagInviteDataArray)
+        });
+    },
+    getIndividualReservationData(uid){
+        firestore.collection("reservation").onSnapshot(function(querySnapshot) {
+            let reservationDataArray = []
+            querySnapshot.forEach(function(doc) {
+                // doc.data() is never undefined for query doc snapshots
+                // console.log(doc.id, " => ", doc.data().from_uid);
+                if(uid == doc.data().from_uid){
+                    let data = {
+                        'date': doc.data().date,
+                        'email': doc.data().email,
+                        'inviteID': doc.id,
+                        'time': doc.data().time,
+                        'from_uid': doc.data().from_uid,
+                        'guestName': doc.data().guestName,
+                        'people': doc.data().people,
+                        'tel': doc.data().tel,
+                        'inviteFlag': doc.data().inviteFlag,
+                        'staffName': doc.data().staffName,
+                        'createdAt': doc.data().createdAt,
+                        'shopName': doc.data().shopName
+                    }
+                    reservationDataArray.push(data);
+                }
+                reservationDataArray.sort(function(a,b){
+                    if(a.createdAt < b.createdAt) return -1;
+                    if(a.createdAt > b.createdAt) return 1;
+                    return 0;
+                });
+
+            });
+            store.dispatch('reservationData', reservationDataArray)            // console.log("inviteDataArray",TrueFlagInviteDataArray)
+        });
     },
 
 

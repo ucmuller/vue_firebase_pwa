@@ -236,9 +236,6 @@ a {
   justify-content: center;
 }
 
-.md-card-content {
-}
-
 .data-value{
   width: 80%;
 }
@@ -271,7 +268,7 @@ a {
   color: white;
 }
 
-.md-button-content {
+button.md-button.md-theme-default.md-primary {
   color: #FB6359;
 }
 

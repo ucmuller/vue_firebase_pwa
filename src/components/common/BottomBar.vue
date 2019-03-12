@@ -59,8 +59,8 @@ export default {
   },
   watch: {
     user(){
-      this.getInviteData()
-      this.getReservationData()
+      // this.getInviteData()
+      // this.getReservationData()
     }
   },
 }
