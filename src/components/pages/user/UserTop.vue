@@ -57,7 +57,7 @@
 import Firebase from '@/api/firebase/firebase'
 import { mapGetters } from 'vuex'
 import router from 'vue-router'
-
+import Vuelidate from 'vuelidate'
 
 export default {
   name: 'UserTop',
@@ -74,6 +74,7 @@ export default {
 
   created: function(){
     Firebase.onAuth()
+    console.log(Vuelidate)
   },
   mounted() {
           // this.reject()

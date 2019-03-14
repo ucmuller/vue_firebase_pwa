@@ -16,7 +16,13 @@ const mutations = {
   },
   [types.ALLRESERVATIONDATA](state, everyReservationData) {
     state.everyReservationData = everyReservationData;
-  }
+  },
+  [types.ADMINCLEAR](state) {
+    state.everyStaffData = null;
+    state.everyInviteData = null;
+    state.everyReservationData = null;
+    state.status = false;
+  },
 }
 
 const getters = {
@@ -40,6 +46,9 @@ const actions = {
   },  
   fetchAllReservationData({ commit }, everyReservationData){
     commit(types.ALLRESERVATIONDATA, everyReservationData)
+  },  
+  adminClear({ commit }){
+    commit(types.ADMINCLEAR)
   },  
 }
 

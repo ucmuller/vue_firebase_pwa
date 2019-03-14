@@ -25,6 +25,13 @@ const mutations = {
   [types.INVITEDATALENGTH](state, data) {
     state.inviteDataLength = data;
   },
+  [types.INVITECLEAR](state) {
+    state.allData = null;
+    state.inviteAllDataLength = null;
+    state.inviteData = null;
+    state.dataStatus = false;
+    state.inviteDataLength = null;
+  },
 }
 
 const getters = {
@@ -42,8 +49,7 @@ const getters = {
   },
   inviteAllDataLength(state){
     return state.inviteAllDataLength
-
-  }
+  },
 
 }
 
@@ -56,6 +62,9 @@ const actions = {
   },
   inviteDataLength({ commit }, data){
     commit(types.INVITEDATALENGTH, data)
+  },
+  inviteClear({ commit }){
+    commit(types.INVITECLEAR)
   },
 
 }

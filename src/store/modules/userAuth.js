@@ -25,6 +25,12 @@ const mutations = {
   [types.USER_ONUSERSHOPIMAGECHANGED](state, shopImageURL) {
     state.shopImageURL = shopImageURL;
   },
+  [types.USERAUTHCLEAR](state) {
+    state.user = null;
+    state.status = false;
+    state.imageURL = '';
+    state.shopImageURL = '';
+  },
 }
 
 const getters = {
@@ -55,6 +61,10 @@ const actions = {
   },
   logout({ commit }, status){
     commit(types.USER_ONUSERSTATUSCHANGED, status);
+    commit(types.USERAUTHCLEAR)
+  },
+  userAuthClear({ commit }){
+    commit(types.USERAUTHCLEAR);
   }
   
 }

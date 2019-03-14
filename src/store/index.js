@@ -9,13 +9,15 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
+const modules = {
+  userAuth: userAuth,
+  invite: invite,
+  reservation: reservation,
+  admin: admin
+}
+
 
 export const store = new Vuex.Store({
-  modules: {
-    userAuth: userAuth,
-    invite: invite,
-    reservation: reservation,
-    admin: admin
-  },
+  modules: modules,
   plugins: [createPersistedState({key: 'Guluri'})]
 })

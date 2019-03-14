@@ -23,6 +23,12 @@ const mutations = {
   [types.RESERVATIONDATALENGTH](state, data) {
     state.reservationdataLength = data;
   },
+  [types.RESERVATIONCLEAR](state) {
+    state.allReservationData = null;
+    state.reservationData = null;
+    state.reservationDataStatus = false;
+    state.reservationdataLength = null;
+  },
 }
 
 const getters = {
@@ -49,7 +55,10 @@ const actions = {
   },
   reservationDataLength({ commit }, data){
     commit(types.RESERVATIONDATALENGTH, data)
-  }
+  },
+  reservationClear({ commit }){
+    commit(types.RESERVATIONCLEAR)
+  },
 }
 
 

@@ -82,6 +82,9 @@ export default {
   logout(){
     firebase.auth().signOut().then(()=>{
       store.dispatch('logout', false)
+      store.dispatch('adminClear')
+      store.dispatch('inviteClear')
+      store.dispatch('reservationClear')
       router.push('/')
     })
   },

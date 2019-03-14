@@ -10,7 +10,7 @@
         <md-field>
           <md-icon>person</md-icon>
           <label>E-mail</label>
-          <md-input v-model="email" autofocus></md-input>
+          <md-input v-model="email" autofocus />
         </md-field>
 
         <md-field md-has-password>
@@ -21,7 +21,7 @@
       </div>
 
       <div class="login-button">
-        <md-button class="md-raised md-accent" @click="login">Login</md-button>
+        <md-button class="md-raised md-accent" @click="login" :disabled="$v.$invalid" type="submit">Login</md-button>
       </div>
       <div>
         <router-link class="md-raised md-accent" to="/signup">アカウント作成はこちら</router-link>
@@ -40,6 +40,7 @@
 import { mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
 import router from 'vue-router'
+import { required, minLength, email} from 'vuelidate/lib/validators'
 export default {
   name: 'Signin',
   data() {
@@ -49,11 +50,23 @@ export default {
       loading: false,
     }
   },
+  validations: {
+    email: {
+      required,
+      minLength: minLength(5),
+      email
+    },
+    password: {
+      required,
+      minLength: minLength(6)
+    }
+  },
   created: function(){
     Firebase.onAuth()
     if(this.$store.getters.isSignedIn){
       this.$router.push('/usertop')
     }
+    console.log(this.$v)
   },
 
   computed: {
@@ -65,11 +78,14 @@ export default {
 
   methods: {
     login() {
-      this.loading = true;
-      Firebase.login(this.email, this.password);
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
+      this.$v.$touch()
+      if(!this.$v.$invalid){
+        this.loading = true;
+        Firebase.login(this.email, this.password);
+        setTimeout(() => {
+          this.loading = false;
+        }, 3000);
+      }
     },
     logout() {
       Firebase.logout();

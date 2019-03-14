@@ -40,7 +40,7 @@
       </div>
 
       <div class="signup-button">
-        <md-button class="md-raised md-accent" @click="signup">signup</md-button>
+        <md-button class="md-raised md-accent" @click="signup" :disabled="$v.$invalid">signup</md-button>
       </div>
       <div>
         <router-link class="md-raised md-accent" to="/">ログインはこちら</router-link>
@@ -57,6 +57,7 @@
 <script>
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
+import { required, minLength, email} from 'vuelidate/lib/validators'
 
 export default {
   name: 'Signup',
@@ -70,6 +71,26 @@ export default {
       infoMsg:'＋写真を選択',
       loading: false,
     }
+  },
+  validations: {
+    name: {
+      required,
+    },
+    shopName: {
+      required,
+    },
+    email: {
+      required,
+      minLength: minLength(5),
+      email
+    },
+    password: {
+      required,
+      minLength: minLength(6)
+    },
+    uploadFile: {
+      required,
+    },
   },
   methods: {
     signup(){
