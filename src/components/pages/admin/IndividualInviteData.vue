@@ -6,6 +6,7 @@
         <md-table-cell md-label="ID" md-sort-by="id">{{ item.inviteID }}</md-table-cell>
         <md-table-cell md-label="店名" md-sort-by="shop">{{ item.shopName }}</md-table-cell>
         <md-table-cell md-label="名前" md-sort-by="name">{{ item.staffName }}</md-table-cell>
+        <md-table-cell md-label="ゲスト" md-sort-by="guestName">{{ item.guestName }}</md-table-cell>
         <md-table-cell md-label="人数" md-sort-by="email">{{ item.people }}</md-table-cell>
         <md-table-cell md-label="日付" md-sort-by="Date">{{ item.date }}　{{item.time}}〜</md-table-cell>
         <md-table-cell md-label="Flag" md-sort-by="Flag" v-if="item.inviteFlag == true">招待中</md-table-cell>
