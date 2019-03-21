@@ -37,11 +37,15 @@ export default {
           Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
           // console.log(currentUserData)
       })
-      router.push('/')
+      .then(()=>{
+        this.login(data.email,data.password)
+      })
+      // router.push('/')
     },
     (err) => {
       let errorCode = err.code
       let errorMessage = err.message
+      console.log("signup",errorMessage)
       // alert("もう一度正しく入力してください。")
     })
   },
@@ -57,6 +61,7 @@ export default {
     (err) => {
       // alert("もう一度正しく入力してください。")
       router.push('/')
+      console.log("login", err)
     }) 
     // return firebase.auth().signInWithEmailAndPassword(email, password);
   })
@@ -64,6 +69,8 @@ export default {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
+    console.log("loginerr", errorMessage)
+
   });
 
 

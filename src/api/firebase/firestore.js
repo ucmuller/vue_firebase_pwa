@@ -36,6 +36,7 @@ export default {
     },
 
     changeStaffData(uid, data){
+        if(data.shopImageURL_1){
             firestore.collection("staff").doc(uid).set({
                 'name': data.name,
                 'shopName': data.shopName,
@@ -49,6 +50,19 @@ export default {
             .catch(function(error) {
                 console.error("Error writing document: ", error);
             });
+        }else{
+            firestore.collection("staff").doc(uid).set({
+                'name': data.name,
+                'shopName': data.shopName,
+                'messeage': data.messeage,
+            }, { merge: true })
+            .then(function() {
+                console.log("changeStaffData: success",data.shopImageURL_1);
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
+        }
     },
 
     saveInviteData(user, data){
