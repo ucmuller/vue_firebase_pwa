@@ -2,7 +2,7 @@
   <div class="page-container md-layout-column">
     <md-toolbar class="md-primary toolbar">
       <span class="md-title">Rendezvous</span>
-      <md-button v-if="userStatus && user.email == 'ucmuller@gmail.com'" @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</md-button>
+      <md-button v-if="userStatus && (user.email == 'ucmuller@gmail.com' || user.email == 'str531@gmail.com')" @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</md-button>
       <md-button v-if="userStatus" @click="logout" class="logout-button">logout</md-button>
     </md-toolbar>
   </div>

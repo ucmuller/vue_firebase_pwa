@@ -116,7 +116,6 @@ export default {
       return `${year}-${month}-${day} ${hour}:${min}:${sec}` 
     },
     routerPush(router){
-      console.log("oooo")
       this.$router.push(router)
     },
 

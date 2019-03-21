@@ -336,7 +336,7 @@ export default {
                     let data = {
                         'date': doc.data().date,
                         'email': doc.data().email,
-                        'inviteID': doc.id,
+                        'reservationID': doc.id,
                         'time': doc.data().time,
                         'from_uid': doc.data().from_uid,
                         'guestName': doc.data().guestName,
@@ -357,6 +357,22 @@ export default {
 
             });
             store.dispatch('reservationData', reservationDataArray)
+        });
+    },
+
+    deleteInviteDocument(inviteId){
+        firestore.collection("invite").doc(inviteId).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+    },
+
+    deleteReservationDocument(reservationId){
+        firestore.collection("reservation").doc(reservationId).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
         });
     },
 

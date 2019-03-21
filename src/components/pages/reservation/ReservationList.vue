@@ -60,7 +60,7 @@ export default {
 
   watch: {
     allReservationData() {
-      // console.log(this.allReservationData);
+      console.log(this.allReservationData);
     },
   },
 

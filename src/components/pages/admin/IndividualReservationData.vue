@@ -2,14 +2,25 @@
   <div class="table">
     <md-table v-model="allReservationData" md-card>
       <md-table-row slot="md-table-row" slot-scope="{ item }">
+        <md-table-cell md-label="ID" md-sort-by="id">{{ item.reservationID }}</md-table-cell>
         <md-table-cell md-label="店名" md-sort-by="shop">{{ item.shopName }}</md-table-cell>
         <md-table-cell md-label="名前" md-sort-by="name">{{ item.staffName }}</md-table-cell>
         <md-table-cell md-label="人数" md-sort-by="email">{{ item.people }}</md-table-cell>
         <md-table-cell md-label="日付" md-sort-by="Date">{{ item.date }}　{{item.time}}〜</md-table-cell>
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell>
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="!item.createdAt"></md-table-cell>
+        <md-table-cell md-label="" md-sort-by="delete">
+          <md-button @click="onModal(item.reservationID)" class="md-raised">削除</md-button>
+        </md-table-cell>
       </md-table-row>
     </md-table>
+    <md-dialog-confirm
+      :md-active.sync="modal"
+      md-title="削除してよろしいですか?"
+      md-confirm-text="OK"
+      md-cancel-text="キャンセル"
+      @md-cancel="modal = false"
+      @md-confirm="deleteDocument()" />
   </div>
 </template>
 
@@ -26,6 +37,8 @@ export default {
     return {
       id: this.$route.params.id,
       loading: false,
+      modal: false,
+      ID: null
     }
   },
 
@@ -80,6 +93,15 @@ export default {
       var min  = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
       var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
       return `${year}-${month}-${day} ${hour}:${min}:${sec}` 
+    },
+    onModal(inviteID){
+      this.modal = true
+      this.ID = inviteID
+    },
+    deleteDocument(){
+      console.log(this.ID)
+      this.modal = false
+      Firestore.deleteReservationDocument(this.ID)
     }
   }
 }

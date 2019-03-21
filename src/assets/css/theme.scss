@@ -4,5 +4,9 @@
   primary: #F8F2E3, // The primary color of your application
   accent: #FB6359, // The accent or secondary color
 ));
+@include md-register-theme("ori", (
+  primary: blue, // The primary color of your application
+  accent: red, // The accent or secondary color
+));
 
 @import "~vue-material/dist/theme/all"; // Apply the theme
