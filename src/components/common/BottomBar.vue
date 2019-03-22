@@ -57,12 +57,12 @@ export default {
       inviteData: 'inviteData',
     })
   },
-  watch: {
-    user(){
-      // this.getInviteData()
-      // this.getReservationData()
-    }
-  },
+  // watch: {
+  //   user(){
+  //     this.getInviteData()
+  //     this.getReservationData()
+  //   }
+  // },
 }
 </script>
 

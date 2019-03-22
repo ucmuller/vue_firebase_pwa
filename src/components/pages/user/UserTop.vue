@@ -91,12 +91,14 @@ export default {
       user: 'user',
       inviteAllDataLength: 'inviteAllDataLength',
       reservationdataLength: 'reservationdataLength',
-      inviteDataLength: 'inviteDataLength'
+      inviteDataLength: 'inviteDataLength',
+      peopleOfReservationData: 'peopleOfReservationData'
     })
   },
-  watch: {
-    user() {
-      console.log("ユーザーデータ更新");
+   watch: {
+    user(){
+      this.getInviteData()
+      this.getReservationData()
     }
   },
 

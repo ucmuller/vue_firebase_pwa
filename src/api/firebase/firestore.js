@@ -72,13 +72,13 @@ export default {
             'from_uid': user.staff_uid,
             'guestName': data.guestName,
             'people': data.people,
-            'tel': data.tel,
+            'tel': data.tel ? data.tel : '',
             'shopName': user.shopName,
             'shopImageURL_1': data.shopImageURL_1,
             'staffName': user.name,
             'inviteFlag': true,
             'messeage': user.messeage,
-            'lineMesseage': data.lineMesseage,
+            'lineMesseage': data.lineMesseage ? data.lineMesseage : '',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -115,7 +115,7 @@ export default {
             'tel': data.tel,
             'inviteId': inviteId,
             'reservationFlag': true,
-            'shopImageURL_1': data.shopImageURL_1,
+            'shopImageURL_1': data.shopImageURL_1 ? data.shopImageURL_1 : "",
             'staffName': data.staffName,
             'shopName': data.shopName,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
@@ -218,6 +218,7 @@ export default {
     getReservationData(uid){
         firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let reservationDataArray = []
+            let peopleOfReservationData = 0
             querySnapshot.forEach(function(doc) {
                 if(uid == doc.data().from_uid){
                     let data = {
@@ -234,21 +235,22 @@ export default {
                         'createdAt': doc.data().createdAt,
                         'shopName': doc.data().shopName
                     }
+                    peopleOfReservationData += data.people
                     reservationDataArray.push(data);
                     reservationDataArray.sort(function(a,b){
                         if(a.createdAt < b.createdAt) return -1;
                         if(a.createdAt > b.createdAt) return 1;
                         return 0;
                     });
-                    // console.log("querySnapshot.forEachのdocumet全部",doc.data())
-                    // console.log("querySnapshot.forEachのdocumetのfieldのvalue",doc.data().shopName)
+
                 }else{
                     // console.log("no data")
                 }
             });
             store.dispatch('reservationData', reservationDataArray)
             store.dispatch('reservationDataLength', reservationDataArray.length)
-            // console.log("reservationData",reservationDataArray)
+            store.dispatch('peopleOfReservationData', peopleOfReservationData)
+            // console.log(peopleOfReservationData)
         });
     },
 
@@ -299,16 +301,18 @@ export default {
     fetchAllReservationData(){
         firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let allReservationDataArray = []
+            let confirmedGuest = 0
             querySnapshot.forEach(function(doc) {
                 allReservationDataArray.push(doc.data());
+                confirmedGuest += doc.data().people
             });
-            console.log(allReservationDataArray)
             allReservationDataArray.sort(function(a,b){
                 if(a.createdAt < b.createdAt) return -1;
                 if(a.createdAt > b.createdAt) return 1;
                 return 0;
             });
             store.dispatch('fetchAllReservationData', allReservationDataArray)
+            store.dispatch('fetchConfirmedGuest', confirmedGuest)
         })
     },
     getIndividualInviteData(uid){
@@ -384,6 +388,14 @@ export default {
 
     deleteReservationDocument(reservationId){
         firestore.collection("reservation").doc(reservationId).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+    },
+
+    deleteStaffDocument(staff_uid){
+        firestore.collection("staff").doc(staff_uid).delete().then(function() {
             console.log("Document successfully deleted!");
         }).catch(function(error) {
             console.error("Error removing document: ", error);
