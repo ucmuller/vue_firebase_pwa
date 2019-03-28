@@ -99,9 +99,13 @@ export default {
   onAuth(){
     firebase.auth().onAuthStateChanged(user => {
     let userData = user ? user : {};
-    // console.log(userData.uid)
-    Firestore.getStaffEachData(userData.uid)
-    this.getImageURL(user.photoURL)
+    console.log(userData.uid)
+    if(userData.uid){
+      Firestore.getStaffEachData(userData.uid)
+      this.getImageURL(user.photoURL)
+    }else{
+      router.push('/')
+    }
     });
   },
 

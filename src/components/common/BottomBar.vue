@@ -35,7 +35,7 @@ import Firestore from '@/api/firebase/firestore'
 export default {
   name: 'Shift',
   created() {
-    Firebase.onAuth()
+    // Firebase.onAuth()
   },
   methods: {
     routerPush(router){

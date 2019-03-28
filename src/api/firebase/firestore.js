@@ -25,6 +25,8 @@ export default {
             'photoURL': data.photoURL,
             'shopName': shopName,
             'messeage': "ご来店お待ちしています。",
+            'shopImageURL_1': "",
+            'lineMesseage': "",
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -65,8 +67,21 @@ export default {
         }
     },
 
-    saveInviteData(user, data){
-        firestore.collection("invite").doc().set({
+    changeLineMesseageOfStaffData(uid, data){
+        firestore.collection("staff").doc(uid).set({
+            'lineMesseage': data.lineMesseage,
+        }, { merge: true })
+        .then(function() {
+            Firebase.uploadShopImage(data.shopImageURL_1)
+            console.log("changeStaffData: success",data.shopImageURL_1);
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+
+    saveInviteData(user, data ,documentID){
+        firestore.collection("invite").doc(documentID).set({
             'time': data.time,
             'date': data.date,
             'from_uid': user.staff_uid,

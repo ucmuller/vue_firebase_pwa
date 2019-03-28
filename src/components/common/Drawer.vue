@@ -25,7 +25,7 @@ export default {
     }
   },
   created: function(){
-    Firebase.onAuth()
+    // Firebase.onAuth()
   },
   computed: {
     ...mapGetters({

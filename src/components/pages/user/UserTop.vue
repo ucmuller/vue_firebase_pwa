@@ -55,6 +55,7 @@
 <script>
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
+import Firestore from '@/api/firebase/firestore'
 import { mapGetters } from 'vuex'
 import router from 'vue-router'
 import Vuelidate from 'vuelidate'
@@ -74,11 +75,12 @@ export default {
 
   created: function(){
     Firebase.onAuth()
+    this.getInviteData()
+    this.getReservationData()
     console.log(Vuelidate)
   },
   mounted() {
-          // this.reject()
-
+    // this.reject()
   },
 
   computed: {
@@ -96,7 +98,7 @@ export default {
     })
   },
    watch: {
-    user(){
+    reservationdataLength(){
       this.getInviteData()
       this.getReservationData()
     }
@@ -114,9 +116,15 @@ export default {
     },
     reject(){
       if(!this.userStatus){
-          this.$router.push("/signin")
+        this.$router.push("/")
       }
-    }
+    },
+    getInviteData(){
+      Firestore.getInviteData(this.user.staff_uid)
+    },
+    getReservationData(){
+      Firestore.getReservationData(this.user.staff_uid)
+    },
   }
 }
 </script>

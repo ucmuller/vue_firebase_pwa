@@ -5,18 +5,6 @@
           <img v-if="data.shopImageURL_1" :src="data.shopImageURL_1" alt="Coffee House">
           <img v-else src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
         </md-card-media>
-
-        <!-- <md-card-header>
-          <h2 class="md-title">{{user.shopName}}</h2>
-          <div class="md-subhead">
-            <md-icon>location_on</md-icon>
-            <span>2 miles</span>
-          </div>
-        </md-card-header> -->
-        <!-- <md-card-content>
-          Shop Detail Shop Detail 
-          Shop Detail Shop Detail 
-        </md-card-content> -->
       </md-card-area>
 
       <md-card-content>
@@ -97,9 +85,8 @@ export default {
         guestName:'',
         people:'',
         shopName: '',
-        lineMesseage: '',
+        lineMesseage: this.$store.getters.user.lineMesseage,
         shopImageURL_1: this.$store.getters.shopImageURL
-
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -115,6 +102,7 @@ export default {
         "24:00","24:30",
         ],
       peoples: [1,2,3,4,5,6,7,8,9,10],
+      documentID: ''
     }
   },
   created: function(){
@@ -128,6 +116,17 @@ export default {
       user: 'user',
       shopImageURL: 'shopImageURL'
     }),
+    url(){
+      let domain = document.domain
+      console.log(domain)
+      if(domain == "localhost"){
+        // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.data.lineMesseage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
+      } else {
+        // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.data.lineMesseage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
+      }
+    },
   },
   watch: {
     shopImageURL() {
@@ -141,14 +140,19 @@ export default {
       Firebase.logout();
     },
     saveInviteData(){
-      Firestore.saveInviteData(this.user, this.data)
-      console.log(this.$store.getters.user.shopName)
+      this.documentID = this.user.staff_uid + Date.now()
+      Firestore.saveInviteData(this.user, this.data, this.documentID)
+      Firestore.changeLineMesseageOfStaffData(this.user.staff_uid, this.data)
+      this.launchLine()
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
     },
     getShopImageURL(){
       console.log(this.$store.getters.user.shopImageURL_1)
       Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
-    }
+    },
+    launchLine(){
+      location.href = this.url;
+    },
   }
 }
 </script>

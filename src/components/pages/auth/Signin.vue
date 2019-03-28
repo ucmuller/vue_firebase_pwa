@@ -62,11 +62,11 @@ export default {
     }
   },
   created: function(){
-    Firebase.onAuth()
-    if(this.$store.getters.isSignedIn){
-      this.$router.push('/usertop')
-    }
-    console.log(this.$v)
+    // Firebase.onAuth()
+    // if(this.$store.getters.isSignedIn){
+    //   this.$router.push('/usertop')
+    // }
+    // console.log(this.$v)
   },
 
   computed: {
