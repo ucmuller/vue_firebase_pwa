@@ -56,11 +56,8 @@
           </div>
         </div>
       </md-card-content>
-
-      <md-card-actions>
-        <md-button @click="saveInviteData" class="md-raised md-accent">予約リストに追加</md-button>
+      <button @click="saveInviteData" class="line-button">LINE送信</button>
         <!-- <router-link :to="{name:'InviteList',params:{id:user.staff_uid}}">InviteList!</router-link> -->
-      </md-card-actions>
     </md-card>
   <div v-else>
       <router-link to="/">sign in now!</router-link>
@@ -163,6 +160,31 @@ export default {
 a {
   color: #42b983;
 }
+
+.line-button{
+  color: white;
+  background-color:#6cc655;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+              0 2px 2px 0 rgba(0,0,0,.14),
+              0 1px 5px 0 rgba(0,0,0,.12);
+  min-width: 88px;
+  height: 36px;
+  margin: 6px 8px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition:0.4s;
+}
+
+.line-button:hover {
+  opacity:0.7;
+}
+
 .md-card{
   width: 90%;
   margin-top: 70px;

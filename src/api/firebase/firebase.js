@@ -11,7 +11,7 @@ import Firestore from '@/api/firebase/firestore'
 export default {
   init(){
     firebase.initializeApp(firebaseConfig)
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   },
 
   signup(data){
@@ -40,7 +40,7 @@ export default {
       .then(()=>{
         this.login(data.email,data.password)
       })
-      // router.push('/')
+      // router.push('/signin')
     },
     (err) => {
       let errorCode = err.code
@@ -52,38 +52,26 @@ export default {
 
   login(email,password){
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .then(function() {
+    .then(() => {
     firebase.auth().signInWithEmailAndPassword(email,password)
     .then(currentUser => {
       Firestore.getStaffEachData(currentUser.user.uid)
-      router.push('/usertop')
+      router.push('/')
     },
     (err) => {
       // alert("もう一度正しく入力してください。")
-      router.push('/')
+      router.push('/signin')
       console.log("login", err)
-    }) 
+    })
     // return firebase.auth().signInWithEmailAndPassword(email, password);
-  })
-  .catch(function(error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log("loginerr", errorMessage)
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log("loginerr", errorMessage)
 
-  });
-
-
-
-    // firebase.auth().signInWithEmailAndPassword(email,password)
-    // .then(currentUser => {
-    //   Firestore.getStaffEachData(currentUser.user.uid)
-    //   router.push('/usertop')
-    // },
-    // (err) => {
-    //   // alert("もう一度正しく入力してください。")
-    //   router.push('/')
-    // }) 
+    });
   },
 
   logout(){
@@ -92,7 +80,7 @@ export default {
       store.dispatch('adminClear')
       store.dispatch('inviteClear')
       store.dispatch('reservationClear')
-      router.push('/')
+      router.push('/signin')
     })
   },
 
@@ -104,7 +92,7 @@ export default {
       Firestore.getStaffEachData(userData.uid)
       this.getImageURL(user.photoURL)
     }else{
-      router.push('/')
+      router.push('/signin')
     }
     });
   },

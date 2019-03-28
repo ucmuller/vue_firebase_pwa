@@ -43,7 +43,7 @@
         <md-button class="md-raised md-accent" @click="signup" :disabled="$v.$invalid">signup</md-button>
       </div>
       <div>
-        <router-link class="md-raised md-accent" to="/">ログインはこちら</router-link>
+        <router-link class="md-raised md-accent" to="/signin">ログインはこちら</router-link>
       </div>
 
       <div class="loading-overlay" v-if="loading">

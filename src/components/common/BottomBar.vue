@@ -2,7 +2,7 @@
     <div class="phone-viewport" v-if="userStatus">
       <md-bottom-bar class="md-primary bottom-bar" md-type="shift">
         <div class="bottom-bar-item">
-          <md-bottom-bar-item @click="routerPush('/usertop')" id="bottom-bar-item-account">
+          <md-bottom-bar-item @click="routerPush('/')" id="bottom-bar-item-account">
             <md-icon>account_circle</md-icon>
             <span class="md-bottom-bar-label">プロフィール</span>
           </md-bottom-bar-item>

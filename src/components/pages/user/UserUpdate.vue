@@ -40,7 +40,7 @@
       </div>
     </div>
   <div class="messeage" v-else-if="!userStatus">
-      <router-link to="/">ブラウザがシークレットモードだと再ログインが必要です</router-link>
+      <router-link to="/signin">ブラウザがシークレットモードだと再ログインが必要です</router-link>
   </div>
 
 </template>
@@ -114,7 +114,7 @@ export default {
       Firebase.changeStaffProfile(this.user.staff_uid, this.datas)
       setTimeout(() => {
         this.loading = false;
-        this.$router.push("/usertop")
+        this.$router.push("/")
       }, 4000);
     },
     selectFile: function (e) {

@@ -47,11 +47,11 @@
     <md-card-actions>
     </md-card-actions> -->
     <div v-if="inviteData.inviteFlag">
-      <md-button v-if="inviteFlag" class="md-raised" @click="routerPush({name:'InvitePageUpdate',params:{id:id}})">内容変更</md-button>
+      <!-- <md-button v-if="inviteFlag" class="md-raised" @click="routerPush({name:'InvitePageUpdate',params:{id:id}})">内容変更</md-button> -->
       <!-- <md-button v-if="userStatus" :href="url" class="md-raised md-primary">LINE送信
         <img src="@/assets/share-a.png" alt="" srcset="" width="100%">
       </md-button> -->
-      <button v-if="userStatus" @click="launchLine" class="line-button">LINE送信</button>
+      <!-- <button v-if="userStatus" @click="launchLine" class="line-button">LINE送信</button> -->
       <md-button v-if="inviteFlag && !userStatus" @click="saveReservationData" class="md-raised md-accent">予約を確定</md-button>
     </div>
     <md-dialog-alert
@@ -90,7 +90,7 @@ export default {
   },
 
   created: function(){
-    Firebase.onAuth()
+    // Firebase.onAuth()
     // this.getShopImageURL()
     // this.loadingOverlay()
     this.getInviteEachData()

@@ -25,7 +25,7 @@ let router =  new Router({
   mode: 'history',
   routes: [
     {
-      path: '/usertop',
+      path: '/',
       name: 'UserTop',
       component: UserTop,
       meta: { requiresAuth: true }
@@ -61,7 +61,7 @@ let router =  new Router({
       component: Signup
     },
     {
-      path: '/',
+      path: '/signin',
       name: 'Signin',
       component: Signin
     },

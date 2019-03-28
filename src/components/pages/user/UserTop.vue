@@ -48,7 +48,7 @@
     </md-card>
     </div>
   <div class="messeage" v-else>
-      <router-link to="/" class="md-accent">ブラウザがシークレットモードだと再ログインが必要です</router-link>
+      <router-link to="/signin" class="md-accent">ブラウザがシークレットモードだと再ログインが必要です</router-link>
   </div>
 </template>
 
@@ -116,7 +116,7 @@ export default {
     },
     reject(){
       if(!this.userStatus){
-        this.$router.push("/")
+        this.$router.push("/signin")
       }
     },
     getInviteData(){
