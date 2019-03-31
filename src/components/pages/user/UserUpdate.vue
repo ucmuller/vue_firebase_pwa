@@ -22,7 +22,7 @@
             <md-field>
               <div>
                 <label>ひとこと</label>
-                <md-input v-model="datas.messeage"></md-input>
+                <md-input v-model="datas.message"></md-input>
               </div>
             </md-field>
             <v-input prepend-icon="image">
@@ -39,7 +39,7 @@
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
       </div>
     </div>
-  <div class="messeage" v-else-if="!userStatus">
+  <div class="message" v-else-if="!userStatus">
       <router-link to="/signin">ブラウザがシークレットモードだと再ログインが必要です</router-link>
   </div>
 
@@ -57,7 +57,7 @@ export default {
       datas: {
         shopName: this.$store.getters.user.shopName,
         name: this.$store.getters.user.name,
-        messeage: this.$store.getters.user.messeage,
+        message: this.$store.getters.user.message,
         shopImageURL_1: this.$store.getters.user.shopImageURL_1,
         shopImageName_1: this.$store.getters.user.shopImageURL_1,
       },

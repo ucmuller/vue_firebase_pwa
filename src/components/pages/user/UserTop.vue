@@ -16,9 +16,9 @@
               <span class="md-list-item-text">{{user.name}}</span>
             </md-list-item>
 
-            <md-list-item v-if="user.messeage">
+            <md-list-item v-if="user.message">
               <md-icon class="md-accent">comment</md-icon>
-              <span class="md-list-item-text">{{user.messeage}}</span>
+              <span class="md-list-item-text">{{user.message}}</span>
             </md-list-item>
 
             <md-list-item>
@@ -47,7 +47,7 @@
         </div>
     </md-card>
     </div>
-  <div class="messeage" v-else>
+  <div class="message" v-else>
       <router-link to="/signin" class="md-accent">ブラウザがシークレットモードだと再ログインが必要です</router-link>
   </div>
 </template>
@@ -142,7 +142,7 @@ export default {
     padding-bottom: 10px;
     margin-bottom: 80px;
   }
-  .messeage{
+  .message{
     width: 90%;
     margin-top: 70px;
     display: inline-block;

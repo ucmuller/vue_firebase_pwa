@@ -15,7 +15,7 @@
 
         <md-field md-has-password>
           <md-icon>lock</md-icon>
-          <label>Password</label>
+          <label>Password(6桁以上)</label>
           <md-input v-model="password" type="password"></md-input>
         </md-field>
       </div>

@@ -24,9 +24,9 @@ export default {
             'email': data.email,
             'photoURL': data.photoURL,
             'shopName': shopName,
-            'messeage': "ご来店お待ちしています。",
+            'message': "ご来店お待ちしています。",
             'shopImageURL_1': "",
-            'lineMesseage': "",
+            'lineMessage': "仮予約で登録だけしておいたので、内容確認して問題なければ『予約確認』ボタン押して下さい。待ってるねー！",
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -42,7 +42,7 @@ export default {
             firestore.collection("staff").doc(uid).set({
                 'name': data.name,
                 'shopName': data.shopName,
-                'messeage': data.messeage,
+                'message': data.message,
                 'shopImageURL_1': data.shopImageURL_1.name ? firebase.auth().currentUser.uid + data.shopImageURL_1.name : data.shopImageName_1,
             }, { merge: true })
             .then(function() {
@@ -56,7 +56,7 @@ export default {
             firestore.collection("staff").doc(uid).set({
                 'name': data.name,
                 'shopName': data.shopName,
-                'messeage': data.messeage,
+                'message': data.message,
             }, { merge: true })
             .then(function() {
                 console.log("changeStaffData: success",data.shopImageURL_1);
@@ -67,9 +67,9 @@ export default {
         }
     },
 
-    changeLineMesseageOfStaffData(uid, data){
+    changeLineMessageOfStaffData(uid, data){
         firestore.collection("staff").doc(uid).set({
-            'lineMesseage': data.lineMesseage,
+            'lineMessage': data.lineMessage,
         }, { merge: true })
         .then(function() {
             Firebase.uploadShopImage(data.shopImageURL_1)
@@ -92,8 +92,8 @@ export default {
             'shopImageURL_1': data.shopImageURL_1,
             'staffName': user.name,
             'inviteFlag': true,
-            'messeage': user.messeage,
-            'lineMesseage': data.lineMesseage ? data.lineMesseage : '',
+            'message': user.message,
+            'lineMessage': data.lineMessage ? data.lineMessage : '',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {

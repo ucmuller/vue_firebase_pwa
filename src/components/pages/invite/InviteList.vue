@@ -21,7 +21,7 @@
     </md-list>
   </div>
   <div v-else>
-      <router-link to="/">sign in now!</router-link>
+      <router-link to="/signin">sign in now!</router-link>
   </div>
   <!-- <div class="loading-overlay" v-if="loading">
     <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>

@@ -9,25 +9,25 @@
       <div class="form">
         <md-field>
           <md-icon>person</md-icon>
-          <label>名前</label>
+          <label>名前(※必須)</label>
           <md-input v-model="name" autofocus></md-input>
         </md-field>
 
         <md-field>
           <md-icon>home</md-icon>
-          <label>店舗名</label>
+          <label>店舗名(※必須)</label>
           <md-input v-model="shopName" autofocus></md-input>
         </md-field>
         
         <md-field>
           <md-icon>email</md-icon>
-          <label>E-mail</label>
+          <label>E-mail(※必須)</label>
           <md-input v-model="email" autofocus></md-input>
         </md-field>
 
         <md-field md-has-password>
           <md-icon>lock</md-icon>
-          <label>Password</label>
+          <label>Password(6桁以上,※必須)</label>
           <md-input v-model="password" type="password"></md-input>
         </md-field>
 
@@ -68,7 +68,7 @@ export default {
       email: '',
       password: '',
       uploadFile:'',
-      infoMsg:'＋写真を選択',
+      infoMsg:'＋写真を選択(※必須)',
       loading: false,
     }
   },

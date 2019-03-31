@@ -50,8 +50,8 @@
             <md-input v-model="data.tel"></md-input>
           </md-field>
           <md-field>
-            <label>メッセージ</label>
-            <md-textarea v-model="data.lineMesseage"></md-textarea>
+            <label>メッセージ(※自由に編集できます)</label>
+            <md-textarea v-model="data.lineMessage"></md-textarea>
           </md-field>
           </div>
         </div>
@@ -60,7 +60,7 @@
         <!-- <router-link :to="{name:'InviteList',params:{id:user.staff_uid}}">InviteList!</router-link> -->
     </md-card>
   <div v-else>
-      <router-link to="/">sign in now!</router-link>
+      <router-link to="/signin">sign in now!</router-link>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ export default {
         guestName:'',
         people:'',
         shopName: '',
-        lineMesseage: this.$store.getters.user.lineMesseage,
+        lineMessage: this.$store.getters.user.lineMessage,
         shopImageURL_1: this.$store.getters.shopImageURL
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
@@ -118,10 +118,10 @@ export default {
       console.log(domain)
       if(domain == "localhost"){
         // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?${this.data.lineMesseage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
+        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
       } else {
         // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?${this.data.lineMesseage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
+        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
       }
     },
   },
@@ -139,7 +139,7 @@ export default {
     saveInviteData(){
       this.documentID = this.user.staff_uid + Date.now()
       Firestore.saveInviteData(this.user, this.data, this.documentID)
-      Firestore.changeLineMesseageOfStaffData(this.user.staff_uid, this.data)
+      Firestore.changeLineMessageOfStaffData(this.user.staff_uid, this.data)
       this.launchLine()
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
     },
