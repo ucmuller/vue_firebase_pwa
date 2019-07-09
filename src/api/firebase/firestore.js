@@ -157,6 +157,20 @@ export default {
         });
     },
 
+    saveReferralData(current_uid, from_uid, data){
+        firestore.collection("referral").doc(current_uid).set({
+            'from_uid': from_uid,
+            'name': data.displayName,
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            // console.log("saveInviteData: Document written with ID");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+
     getInviteData(uid){
         firestore.collection("invite").onSnapshot(function(querySnapshot) {
             let inviteDataArray = []
@@ -390,6 +404,28 @@ export default {
 
             });
             store.dispatch('reservationData', reservationDataArray)
+        });
+    },
+    getIndividualReferralData(uid){
+        firestore.collection("referral").onSnapshot(function(querySnapshot) {
+            let referralDataArray = []
+            querySnapshot.forEach(function(doc) {
+                if(uid == doc.data().from_uid){
+                    let data = {
+                        'from_uid': doc.data().from_uid,
+                        'name': doc.data().name,
+                        'createdAt': doc.data().createdAt,
+                    }
+                    referralDataArray.push(data);
+                }
+                referralDataArray.sort(function(a,b){
+                    if(a.createdAt < b.createdAt) return -1;
+                    if(a.createdAt > b.createdAt) return 1;
+                    return 0;
+                });
+
+            });
+            store.dispatch('referralData', referralDataArray)
         });
     },
 

@@ -39,6 +39,8 @@ export default {
       })
       .then(()=>{
         this.login(data.email,data.password)
+        store.dispatch('loginState', "")
+
       })
       // router.push('/signin')
     },
@@ -46,6 +48,47 @@ export default {
       let errorCode = err.code
       let errorMessage = err.message
       console.log("signup",errorMessage)
+      store.dispatch('loginState', errorMessage)
+      // alert("もう一度正しく入力してください。")
+    })
+  },
+
+  signupWithReferral(data,from_uid){
+    firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+    .then((user) => {
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+    })
+    .then(()=>{
+      this.addUserDate(data)
+      console.log('signup: success')
+    })
+    .then(()=>{
+      this.upload(data.uploadFile)
+      // router.push('/signin')
+    })
+    .then(()=>{
+      console.log("uplaod後")
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+      .then(
+        (currentUser) => {
+          let currentUserData = currentUser.user
+          let currentUserID = currentUserData.uid
+          Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
+          Firestore.saveReferralData(currentUserID, from_uid, currentUserData)
+          // console.log(currentUserData)
+      })
+      .then(()=>{
+        this.login(data.email,data.password)
+        store.dispatch('loginState', "")
+      })
+      // router.push('/signin')
+    },
+    (err) => {
+      let errorCode = err.code
+      let errorMessage = err.message
+      console.log("signupWithReferral",errorMessage)
+      store.dispatch('loginState', errorMessage)
+
       // alert("もう一度正しく入力してください。")
     })
   },
@@ -56,12 +99,15 @@ export default {
     firebase.auth().signInWithEmailAndPassword(email,password)
     .then(currentUser => {
       Firestore.getStaffEachData(currentUser.user.uid)
-      router.push('/')
+      store.dispatch('loginState', "")
+      router.push("/")
     },
     (err) => {
       // alert("もう一度正しく入力してください。")
-      router.push('/signin')
+      // router.push('/signin')
       console.log("login", err)
+      store.dispatch('loginState', err.message)
+
     })
     // return firebase.auth().signInWithEmailAndPassword(email, password);
     })
@@ -70,7 +116,7 @@ export default {
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log("loginerr", errorMessage)
-
+      store.dispatch('loginState', errorMessage)
     });
   },
 

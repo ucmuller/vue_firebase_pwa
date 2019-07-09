@@ -5,6 +5,7 @@ import userAuth from './modules/userAuth'
 import invite from './modules/invite'
 import reservation from './modules/reservation'
 import admin from './modules/admin'
+import referral from './modules/referral'
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -13,7 +14,8 @@ const modules = {
   userAuth: userAuth,
   invite: invite,
   reservation: reservation,
-  admin: admin
+  admin: admin,
+  referral: referral
 }
 
 

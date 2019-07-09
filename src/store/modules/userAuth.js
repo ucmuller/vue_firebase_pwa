@@ -9,7 +9,8 @@ const state = {
   user: null,
   status: false,
   imageURL: '',
-  shopImageURL: ''
+  shopImageURL: '',
+  loginState: ''
 }
 
 const mutations = {
@@ -30,6 +31,10 @@ const mutations = {
     state.status = false;
     state.imageURL = '';
     state.shopImageURL = '';
+    state.loginState = '';
+  },
+  [types.USERLOGINSTATE](state, message) {
+    state.loginState = message;
   },
 }
 
@@ -46,6 +51,9 @@ const getters = {
   shopImageURL(state){
     return state.shopImageURL
   },
+  loginState(state){
+    return state.loginState
+  }
 }
 
 const actions = {
@@ -65,6 +73,9 @@ const actions = {
   },
   userAuthClear({ commit }){
     commit(types.USERAUTHCLEAR);
+  },
+  loginState({ commit }, message){
+    commit(types.USERLOGINSTATE, message)
   }
   
 }

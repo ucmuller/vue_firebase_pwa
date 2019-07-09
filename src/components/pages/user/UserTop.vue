@@ -69,7 +69,8 @@ export default {
       email:'',
       password:'',
       photoURL:'',
-      updateStatus: false
+      updateStatus: false,
+      userData: ''
     }
   },
 
@@ -78,9 +79,6 @@ export default {
     this.getInviteData()
     this.getReservationData()
     console.log(Vuelidate)
-  },
-  mounted() {
-    // this.reject()
   },
 
   computed: {

@@ -9,16 +9,24 @@
       <div class="form">
         <md-field>
           <md-icon>person</md-icon>
-          <label>E-mail</label>
-          <md-input v-model="email" autofocus />
+          <label v-if="$v.email.email">Email</label>
+          <label v-if="!$v.email.email">
+            <span class="login-alert">形式が間違っています。</span>
+          </label>
+          <md-input v-model="email" @input="$v.email.$touch" autofocus />
         </md-field>
 
         <md-field md-has-password>
           <md-icon>lock</md-icon>
-          <label>Password(6桁以上)</label>
+          <label v-if="$v.password.minLength">Password(6桁以上)</label>
+          <label v-if="!$v.password.minLength">
+            <span class="login-alert">6桁以上で入力して下さい。</span>
+          </label>
           <md-input v-model="password" type="password"></md-input>
         </md-field>
       </div>
+      <p class="login-alert center" v-if="loginState == 'The password is invalid or the user does not have a password.'" >パスワードが間違っています。</p>
+      <p class="login-alert center" v-if="loginState == 'There is no user record corresponding to this identifier. The user may have been deleted.'" >このメールアドレスは登録されていません。</p>
 
       <div class="login-button">
         <md-button class="md-raised md-accent" @click="login" :disabled="$v.$invalid" type="submit">Login</md-button>
@@ -73,6 +81,7 @@ export default {
     ...mapGetters({
       userStatus: 'isSignedIn',
       user: 'user',
+      loginState: 'loginState'
     })
   },
 
@@ -123,6 +132,12 @@ a {
   margin-bottom: 10px;
 }
 
+.login-alert {
+  justify-content: left;
+  color: red;
+  margin-bottom: 0px;
+}
+
 .title {
   text-align: center;
   margin-bottom: 30px;
@@ -159,5 +174,8 @@ a {
 }
 .md-field.md-theme-default.md-focused > .md-icon {
     color: var(--md-theme-default-accent, #FB6359);
+}
+.form__alert {
+  color: red;
 }
 </style>

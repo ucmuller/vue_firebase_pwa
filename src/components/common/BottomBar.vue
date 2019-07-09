@@ -10,15 +10,20 @@
             <md-icon>email</md-icon>
             <span class="md-bottom-bar-label">招待作成</span>
           </md-bottom-bar-item>
-          <md-bottom-bar-item @click="routerPush({name:'InviteList',params:{id:user.staff_uid}})" id="bottom-bar-item-playlist">
+          <md-bottom-bar-item @click="routerPush({name:'InviteList',params:{id:user.staff_uid}})" id="bottom-bar-item-InviteList">
             <md-icon>playlist_add_check</md-icon>
-            <span class="md-bottom-bar-label">招待リスト</span>
+            <span class="md-bottom-bar-label">予約リスト</span>
             <i class="badge" v-if="inviteDataLength">{{ inviteDataLength }}</i>
           </md-bottom-bar-item>
-          <md-bottom-bar-item @click="routerPush({name:'ReservationList',params:{id:user.staff_uid}})" id="bottom-bar-item-pages">
+          <!-- <md-bottom-bar-item @click="routerPush({name:'ReservationList',params:{id:user.staff_uid}})" id="bottom-bar-item-ReservationList">
             <md-icon>assignment</md-icon>
             <span class="md-bottom-bar-label">予約リスト</span>
             <i class="badge" v-if="reservationdataLength">{{ reservationdataLength }}</i>
+          </md-bottom-bar-item> -->
+          <md-bottom-bar-item @click="routerPush({name:'ReferralForm',params:{id:user.staff_uid}})" id="bottom-bar-item-ReferralForm">
+            <md-icon>assignment</md-icon>
+            <span class="md-bottom-bar-label">スタッフ招待</span>
+            <!-- <i class="badge" v-if="reservationdataLength">{{ reservationdataLength }}</i> -->
           </md-bottom-bar-item>
         </div>
       </md-bottom-bar>

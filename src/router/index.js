@@ -17,6 +17,8 @@ import InviteData from '@/components/pages/admin/InviteData'
 import ReservationData from '@/components/pages/admin/ReservationData'
 import IndividualInviteData from '@/components/pages/admin/IndividualInviteData'
 import IndividualReservationData from '@/components/pages/admin/IndividualReservationData'
+import ReferralForm from '@/components/pages/referral/ReferralForm'
+import ReferralPage from '@/components/pages/referral/ReferralPage'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -130,6 +132,22 @@ let router =  new Router({
       path: '/IndividualReservationData/:id',
       name: 'IndividualReservationData',
       component: IndividualReservationData,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/referralform/:id',
+      name: 'ReferralForm',
+      component: ReferralForm,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/referralpage/:id',
+      name: 'ReferralPage',
+      component: ReferralPage,
       props: route => ({
         id: Number(route.params.id)
       })
