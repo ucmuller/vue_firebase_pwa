@@ -81,6 +81,7 @@ import Firebase from '@/api/firebase/firebase'
 import { required, minLength, email} from 'vuelidate/lib/validators'
 import { mapGetters } from 'vuex'
 
+
 export default {
   name: 'Signup',
   data() {
@@ -92,8 +93,7 @@ export default {
       uploadFile:'',
       infoMsg:'＋写真を選択(※必須)',
       loading: false,
-      errorBool: false,
-      login: this.loginState
+      from_uid: this.$route.params.id
     }
   },
   validations: {
@@ -134,7 +134,7 @@ export default {
         'uploadFile': this.uploadFile,
         'shopName': this.shopName
       }
-      Firebase.signup(userData)
+      Firebase.signupWithReferral(userData,this.from_uid)
       setTimeout(() => {
         this.loading = false;
       }, 3000);
@@ -153,7 +153,7 @@ export default {
         return;
       }     
       Firebase.upload(this.uploadFile)
-    },
+    }
   }
   
 }
@@ -172,6 +172,12 @@ a {
   border-radius: 12px;
 }
 
+.login-alert {
+  justify-content: left;
+  color: red;
+  margin-bottom: 0px;
+}
+
 .centered-container {
   align-items: center;
   justify-content: center;
@@ -186,12 +192,6 @@ a {
   padding-bottom: 10px;
   margin-bottom: 110px;
   max-width: 600px;
-}
-
-.login-alert {
-  justify-content: left;
-  color: red;
-  margin-bottom: 0px;
 }
 
 .title {

@@ -16,9 +16,9 @@
               <span class="md-list-item-text">{{user.name}}</span>
             </md-list-item>
 
-            <md-list-item v-if="user.messeage">
+            <md-list-item v-if="user.message">
               <md-icon class="md-accent">comment</md-icon>
-              <span class="md-list-item-text">{{user.messeage}}</span>
+              <span class="md-list-item-text">{{user.message}}</span>
             </md-list-item>
 
             <md-list-item>
@@ -26,17 +26,17 @@
               <span class="md-list-item-text">{{user.email}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item v-if="inviteAllDataLength">
               <md-icon class="md-accent">group_add</md-icon>
               <span class="md-list-item-text">招待数：{{inviteAllDataLength}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item v-if="inviteDataLength">
               <md-icon class="md-accent">people_outline</md-icon>
               <span class="md-list-item-text">招待中：{{inviteDataLength}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item >
               <md-icon class="md-accent">people</md-icon>
               <span class="md-list-item-text">確約数：{{reservationdataLength}}</span>
             </md-list-item>
@@ -47,14 +47,15 @@
         </div>
     </md-card>
     </div>
-  <div class="messeage" v-else>
-      <router-link to="/" class="md-accent">ブラウザがシークレットモードだと再ログインが必要です</router-link>
+  <div class="message" v-else>
+      <router-link to="/signin" class="md-accent">ブラウザがシークレットモードだと再ログインが必要です</router-link>
   </div>
 </template>
 
 <script>
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
+import Firestore from '@/api/firebase/firestore'
 import { mapGetters } from 'vuex'
 import router from 'vue-router'
 import Vuelidate from 'vuelidate'
@@ -68,17 +69,16 @@ export default {
       email:'',
       password:'',
       photoURL:'',
-      updateStatus: false
+      updateStatus: false,
+      userData: ''
     }
   },
 
   created: function(){
     Firebase.onAuth()
-    console.log(Vuelidate)
-  },
-  mounted() {
-          // this.reject()
-
+    this.getInviteData()
+    this.getReservationData()
+    // console.log(Vuelidate)
   },
 
   computed: {
@@ -91,12 +91,14 @@ export default {
       user: 'user',
       inviteAllDataLength: 'inviteAllDataLength',
       reservationdataLength: 'reservationdataLength',
-      inviteDataLength: 'inviteDataLength'
+      inviteDataLength: 'inviteDataLength',
+      peopleOfReservationData: 'peopleOfReservationData'
     })
   },
-  watch: {
-    user() {
-      console.log("ユーザーデータ更新");
+   watch: {
+    reservationdataLength(){
+      this.getInviteData()
+      this.getReservationData()
     }
   },
 
@@ -112,9 +114,15 @@ export default {
     },
     reject(){
       if(!this.userStatus){
-          this.$router.push("/signin")
+        this.$router.push("/signin")
       }
-    }
+    },
+    getInviteData(){
+      Firestore.getInviteData(this.user.staff_uid)
+    },
+    getReservationData(){
+      Firestore.getReservationData(this.user.staff_uid)
+    },
   }
 }
 </script>
@@ -132,7 +140,7 @@ export default {
     padding-bottom: 10px;
     margin-bottom: 80px;
   }
-  .messeage{
+  .message{
     width: 90%;
     margin-top: 70px;
     display: inline-block;
