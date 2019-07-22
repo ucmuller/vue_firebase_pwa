@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
     <Drawer class="header"/>
     <transition name="component-fade" mode="out-in">
       <router-view class="main"/>

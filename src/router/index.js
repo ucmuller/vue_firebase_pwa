@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import UserTop from '@/components/pages/user/UserTop'
 import Signup from '@/components/pages/auth/Signup'
 import Signin from '@/components/pages/auth/Signin'
+import ResetPassword from '@/components/pages/auth/ResetPassword'
 import InviteForm from '@/components/pages/invite/InviteForm'
 import UserPage from '@/components/pages/user/UserPage'
 import UserUpdate from '@/components/pages/user/UserUpdate'
@@ -17,6 +18,8 @@ import InviteData from '@/components/pages/admin/InviteData'
 import ReservationData from '@/components/pages/admin/ReservationData'
 import IndividualInviteData from '@/components/pages/admin/IndividualInviteData'
 import IndividualReservationData from '@/components/pages/admin/IndividualReservationData'
+import ReferralForm from '@/components/pages/referral/ReferralForm'
+import ReferralPage from '@/components/pages/referral/ReferralPage'
 import firebase from 'firebase'
 
 Vue.use(Router)
@@ -25,7 +28,7 @@ let router =  new Router({
   mode: 'history',
   routes: [
     {
-      path: '/usertop',
+      path: '/',
       name: 'UserTop',
       component: UserTop,
       meta: { requiresAuth: true }
@@ -61,9 +64,14 @@ let router =  new Router({
       component: Signup
     },
     {
-      path: '/',
+      path: '/signin',
       name: 'Signin',
       component: Signin
+    },
+    {
+      path: '/resetpassword',
+      name: 'ResetPassword',
+      component: ResetPassword
     },
     {
       path: '/inviteform',
@@ -130,6 +138,22 @@ let router =  new Router({
       path: '/IndividualReservationData/:id',
       name: 'IndividualReservationData',
       component: IndividualReservationData,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/referralform/:id',
+      name: 'ReferralForm',
+      component: ReferralForm,
+      props: route => ({
+        id: Number(route.params.id)
+      })
+    },
+    {
+      path: '/referralpage/:id',
+      name: 'ReferralPage',
+      component: ReferralPage,
       props: route => ({
         id: Number(route.params.id)
       })

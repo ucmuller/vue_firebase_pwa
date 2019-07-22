@@ -9,7 +9,8 @@ const state = {
   allReservationData: null,
   reservationData: null,
   reservationDataStatus: false,
-  reservationdataLength: null
+  reservationdataLength: null,
+  peopleOfReservationData: null
 }
 
 const mutations = {
@@ -22,6 +23,15 @@ const mutations = {
   },
   [types.RESERVATIONDATALENGTH](state, data) {
     state.reservationdataLength = data;
+  },
+  [types.PEOPLEOFRESERVATIONDATA](state, data) {
+    state.peopleOfReservationData = data;
+  },
+  [types.RESERVATIONCLEAR](state) {
+    state.allReservationData = null;
+    state.reservationData = null;
+    state.reservationDataStatus = false;
+    state.reservationdataLength = null;
   },
 }
 
@@ -37,6 +47,9 @@ const getters = {
   },
   reservationdataLength(state){
     return state.reservationdataLength
+  },
+  peopleOfReservationData(state){
+    return state.peopleOfReservationData
   }
 }
 
@@ -49,7 +62,13 @@ const actions = {
   },
   reservationDataLength({ commit }, data){
     commit(types.RESERVATIONDATALENGTH, data)
-  }
+  },
+  peopleOfReservationData({ commit }, data){
+    commit(types.PEOPLEOFRESERVATIONDATA, data)
+  },
+  reservationClear({ commit }){
+    commit(types.RESERVATIONCLEAR)
+  },
 }
 
 

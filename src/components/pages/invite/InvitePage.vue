@@ -6,7 +6,8 @@
   <md-card class="md-card" v-if="dataStatus">
     <md-card-area md-inset>
       <md-card-media md-ratio="16:9">
-        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <img v-if="!inviteData.shopImageURL_1" src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+        <img v-if="inviteData.shopImageURL_1" :src="inviteData.shopImageURL_1" alt="Coffee House">
       </md-card-media>
 
       <md-card-header>
@@ -16,16 +17,14 @@
           <span>2 miles</span> -->
         </div>
       </md-card-header>
-<!-- 
-      <md-card-content>
-        Shop Detail Shop Detail 
-        Shop Detail Shop Detail 
-      </md-card-content> -->
+
     </md-card-area>
 
     <md-card-content>
+      <h3 v-if="!inviteData.inviteFlag && !userStatus">こちらのご予約は確定しています。</h3>
+      <br>
       <h1 class="md-title">{{inviteData.staffName}}さんからの招待</h1>
-      <h2 class="md-subhead">{{inviteData.messeage}}</h2>
+      <h2 class="md-subhead">{{inviteData.message}}</h2>
       <div class="card-reservation">
         <md-list class="md-double-line"
           v-for="(data, i) in getEachData"
@@ -46,20 +45,37 @@
     <md-card-actions>
     </md-card-actions> -->
     <div v-if="inviteData.inviteFlag">
-      <md-button v-if="inviteFlag" class="md-raised" @click="routerPush({name:'InvitePageUpdate',params:{id:id}})">内容変更</md-button>
+      <!-- <md-button v-if="inviteFlag" class="md-raised" @click="routerPush({name:'InvitePageUpdate',params:{id:id}})">内容変更</md-button> -->
       <!-- <md-button v-if="userStatus" :href="url" class="md-raised md-primary">LINE送信
         <img src="@/assets/share-a.png" alt="" srcset="" width="100%">
       </md-button> -->
-      <button v-if="userStatus" @click="launchLine" class="line-button">LINE送信</button>
-      <md-button v-if="inviteFlag && !userStatus" @click="saveReservationData" class="md-raised md-accent">予約を確定</md-button>
+      <!-- <button v-if="userStatus" @click="launchLine" class="line-button">LINE送信</button> -->
+      <md-button v-if="inviteFlag && !userStatus" @click="openModal" class="md-raised md-accent">予約を確定</md-button>
     </div>
     <md-dialog-alert
         :md-active.sync="alert"
         md-title="予約を確定しました。"
         md-content="ご来店お待ちしております。" />
   </md-card>
-  <div class="loading-overlay" v-if="loading">
-    <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
+  <div class="example-modal-window">
+      <!-- コンポーネント MyModal -->
+    <Modal @close="closeModal" v-if="modal">
+      <!-- default スロットコンテンツ -->
+      <p>確認連絡をする場合がありますので、<br>ご自身の電話番号の入力をおねがいします。</p>
+      <div>
+        <md-field>
+          <md-icon>phone_in_talk</md-icon>
+          <label>電話番号</label>
+          <md-input v-model="telNumber"/>
+        </md-field>
+      </div>
+      <!-- /default -->
+      <!-- footer スロットコンテンツ -->
+      <template slot="footer">
+        <md-button v-if="inviteFlag && !userStatus" @click="saveReservationData" class="md-raised md-accent" :disabled="$v.$invalid">予約を確定</md-button>
+      </template>
+      <!-- /footer -->
+    </Modal>
   </div>
 </div>
 </template>
@@ -69,51 +85,60 @@
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
-import OAuth from "@/components/OAuth";
+import Modal from '@/components/parts/Modal'
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+
+// import OAuth from "@/components/OAuth";
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'UserPage',
-
-  components: {
-    OAuth
-  },
-
+  // name: 'UserPage',
+  components:{Modal},
   data(){
     return {
       shopName: '',
       staffName: '',
       id: this.$route.params.id,
-      photoURL: '',
       date:'',
       email:'',
       guestName:'',
       people:'',
-      datas: null,
+      datas: '',
       alert: false,
       inviteFlag: true,
       loading: false,
+      modal: false,
+      telNumber: ''
     }
   },
 
+   validations: {
+    telNumber: {
+      required,
+      minLength: minLength(10),
+      maxLength: maxLength(12),
+    },
+  },
+
   created: function(){
-    Firebase.onAuth()
-    this.loadingOverlay()
+    // Firebase.onAuth()
+    // this.getShopImageURL()
+    // this.loadingOverlay()
     this.getInviteEachData()
     console.log(document.domain == "localhost")
+    this.signInAnonymously()
   },
 
   computed: {
     url(){
-      
       let domain = document.domain
       console.log(domain)
       if(domain == "localhost"){
         // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?代行で予約しておいたので、予約内容の確認だけお願いします。　　　　　　　　　　　　【予約代行完了|ランデブー】%0D%0Ahttp://localhost:8080/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.$store.getters.inviteData.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.id}`
       } else {
         // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?代行で予約しておいたので、予約内容の確認だけお願いします。　　　　　　　　　　　　【予約代行完了|ランデブー】%0D%0Ahttps://${domain}/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.$store.getters.inviteData.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.id}`
       }
     },
     getEachData() {
@@ -143,15 +168,22 @@ export default {
           value: this.$store.getters.inviteData.tel,
           icon: 'phone_in_talk'
         },
+        // {
+        //   text: 'LINEメッセージ',
+        //   value: this.$store.getters.inviteData.lineMessage,
+        //   icon: 'message'
+        // },
       ]
       return datas
     },
     ...mapGetters({
       dataStatus: 'inviteDataStatus',
       userStatus: 'isSignedIn',
-      user: 'user',
+      // user: 'user',
       inviteData: 'inviteData',
-    })
+      shopImageURL: 'shopImageURL'
+    }),
+
   },
 
   watch: {
@@ -168,11 +200,15 @@ export default {
       Firestore.getInviteEachData(this.$route.params.id)
     },
     saveReservationData(){
+      this.$v.$touch()
+      if(!this.$v.$invalid){
+        Firestore.saveReservationData(this.$store.getters.inviteData, this.$route.params.id, this.telNumber)
+        Firestore.inviteCompletion(this.$route.params.id, this.telNumber)
+        this.alert = true
+        this.inviteFlag = false
+        this.closeModal()
+      }
       // console.log(this.$store.getters.inviteData, this.$route.params.id)
-      Firestore.saveReservationData(this.$store.getters.inviteData, this.$route.params.id)
-      Firestore.inviteCompletion(this.$route.params.id)
-      this.alert = true
-      this.inviteFlag = false
     },
     routerPush(router){
       this.$router.push(router)
@@ -185,7 +221,19 @@ export default {
     },
     launchLine(){
     location.href = this.url;
+    },
+    openModal(){
+      this.modal = true
+    },
+    closeModal(){
+      this.modal = false
+    },
+    signInAnonymously(){
+      Firebase.signInAnonymously()
     }
+    // getShopImageURL(){
+    //   Firebase.getShopImageURL(this.$store.getters.inviteData.shopImageURL_1)
+    // }
   }
 }
 </script>
@@ -263,6 +311,16 @@ a {
 
 .md-button.md-theme-default.md-raised:not([disabled]).md-accent {
   color: white;
+}
+.md-field.md-theme-default:before {
+    background-color: #F8F2E3;
+    background-color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused label {
+    color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused > .md-icon {
+    color: var(--md-theme-default-accent, #FB6359);
 }
 
 button.md-button.md-theme-default.md-primary {

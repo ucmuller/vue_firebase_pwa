@@ -5,18 +5,28 @@ const state = {
   everyInviteData: null,
   everyReservationData: null,
   status: false,
+  confirmedGuest: null
 }
 
 const mutations = {
-  [types.ALLSTAFFDATA](state, everyStaffData) {
-    state.everyStaffData = everyStaffData;
+  [types.ALLSTAFFDATA](state, data) {
+    state.everyStaffData = data;
   },
-  [types.ALLINVITEDATA](state, everyInviteData) {
-    state.everyInviteData = everyInviteData;
+  [types.ALLINVITEDATA](state, data) {
+    state.everyInviteData = data;
   },
-  [types.ALLRESERVATIONDATA](state, everyReservationData) {
-    state.everyReservationData = everyReservationData;
-  }
+  [types.ALLRESERVATIONDATA](state, data) {
+    state.everyReservationData = data;
+  },
+  [types.CONFIRMEDGUEST](state, data) {
+    state.confirmedGuest = data;
+  },
+  [types.ADMINCLEAR](state) {
+    state.everyStaffData = null;
+    state.everyInviteData = null;
+    state.everyReservationData = null;
+    state.status = false;
+  },
 }
 
 const getters = {
@@ -29,17 +39,26 @@ const getters = {
   everyReservationData(state) {
     return state.everyReservationData
   },
+  confirmedGuest(state) {
+    return state.confirmedGuest
+  },
 }
 
 const actions = {
-  fetchAllStaffData({ commit }, everyStaffData){
-    commit(types.ALLSTAFFDATA, everyStaffData)
+  fetchAllStaffData({ commit }, data){
+    commit(types.ALLSTAFFDATA, data)
   },  
-  fetchAllInviteData({ commit }, everyInviteData){
-    commit(types.ALLINVITEDATA, everyInviteData)
+  fetchAllInviteData({ commit }, data){
+    commit(types.ALLINVITEDATA, data)
   },  
-  fetchAllReservationData({ commit }, everyReservationData){
-    commit(types.ALLRESERVATIONDATA, everyReservationData)
+  fetchAllReservationData({ commit }, data){
+    commit(types.ALLRESERVATIONDATA, data)
+  },  
+  fetchConfirmedGuest({ commit }, data){
+    commit(types.CONFIRMEDGUEST, data)
+  },  
+  adminClear({ commit }){
+    commit(types.ADMINCLEAR)
   },  
 }
 

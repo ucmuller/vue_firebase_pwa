@@ -26,15 +26,6 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
-    new workboxPlugin.GenerateSW({
-      cacheId: 'rendevous',
-      globDirectory: config.build.assetsRoot,
-      globPatterns: ['**/*.{html,js,css,png}'],
-      swDest: path.join(config.build.assetsRoot, 'service-worker.js'),
-      skipWaiting: true,
-      clientsClaim: true,
-      runtimeCaching: []
-    }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -46,6 +37,15 @@ module.exports = merge(baseWebpackConfig, {
       serviceWorkerLoader: `<script>${fs.readFileSync(path.join(__dirname,
         './service-worker-dev.js'), 'utf-8')}</script>`
     }),
-    new FriendlyErrorsPlugin()
+    new FriendlyErrorsPlugin(),
+    new workboxPlugin.GenerateSW({
+      cacheId: 'rendevous',
+      globDirectory: config.build.assetsRoot,
+      globPatterns: ['**/*.{html,js,css,png}'],
+      swDest: path.join(config.build.assetsRoot, 'service-worker.js'),
+      skipWaiting: true,
+      clientsClaim: true,
+      runtimeCaching: []
+    }),
   ]
 })

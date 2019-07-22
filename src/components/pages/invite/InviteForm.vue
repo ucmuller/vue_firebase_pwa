@@ -2,20 +2,9 @@
   <md-card class="md-card" v-if="userStatus">
       <md-card-area md-inset>
         <md-card-media md-ratio="16:9">
-          <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
+          <img v-if="data.shopImageURL_1" :src="data.shopImageURL_1" alt="Coffee House">
+          <img v-else src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
         </md-card-media>
-
-        <!-- <md-card-header>
-          <h2 class="md-title">{{user.shopName}}</h2>
-          <div class="md-subhead">
-            <md-icon>location_on</md-icon>
-            <span>2 miles</span>
-          </div>
-        </md-card-header> -->
-        <!-- <md-card-content>
-          Shop Detail Shop Detail 
-          Shop Detail Shop Detail 
-        </md-card-content> -->
       </md-card-area>
 
       <md-card-content>
@@ -60,17 +49,18 @@
             <label>TEL</label>
             <md-input v-model="data.tel"></md-input>
           </md-field>
+          <md-field>
+            <label>メッセージ(※自由に編集できます)</label>
+            <md-textarea v-model="data.lineMessage"></md-textarea>
+          </md-field>
           </div>
         </div>
       </md-card-content>
-
-      <md-card-actions>
-        <md-button @click="saveInviteData" class="md-raised md-accent">予約リストに追加</md-button>
+      <button @click="saveInviteData" class="line-button">LINE送信</button>
         <!-- <router-link :to="{name:'InviteList',params:{id:user.staff_uid}}">InviteList!</router-link> -->
-      </md-card-actions>
     </md-card>
   <div v-else>
-      <router-link to="/">sign in now!</router-link>
+      <router-link to="/signin">sign in now!</router-link>
   </div>
 </template>
 
@@ -91,7 +81,9 @@ export default {
         time:'',
         guestName:'',
         people:'',
-        shopName: this.$store.getters.user.shopName
+        shopName: '',
+        lineMessage: this.$store.getters.user.lineMessage,
+        shopImageURL_1: this.$store.getters.shopImageURL
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -107,27 +99,57 @@ export default {
         "24:00","24:30",
         ],
       peoples: [1,2,3,4,5,6,7,8,9,10],
+      documentID: ''
     }
   },
   created: function(){
     Firebase.onAuth()
+    this.getShopImageURL()
     console.log(this.userStatus)
   },
   computed: {
     ...mapGetters({
       userStatus: 'isSignedIn',
-      user: 'user'
-    })
+      user: 'user',
+      shopImageURL: 'shopImageURL'
+    }),
+    url(){
+      let domain = document.domain
+      console.log(domain)
+      if(domain == "localhost"){
+        // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
+      } else {
+        // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
+        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
+      }
+    },
+  },
+  watch: {
+    shopImageURL() {
+      this.data.shopImageURL_1 = this.$store.getters.shopImageURL
+      this.getShopImageURL()
+      console.log("shopImage更新");
+    },
   },
   methods: {
     logout() {
       Firebase.logout();
     },
     saveInviteData(){
-      Firestore.saveInviteData(this.user, this.data)
-      console.log(this.$store.getters.user.shopName)
+      this.documentID = this.user.staff_uid + Date.now()
+      Firestore.saveInviteData(this.user, this.data, this.documentID)
+      Firestore.changeLineMessageOfStaffData(this.user.staff_uid, this.data)
+      this.launchLine()
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
-    }
+    },
+    getShopImageURL(){
+      console.log(this.$store.getters.user.shopImageURL_1)
+      Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
+    },
+    launchLine(){
+      location.href = this.url;
+    },
   }
 }
 </script>
@@ -138,6 +160,31 @@ export default {
 a {
   color: #42b983;
 }
+
+.line-button{
+  color: white;
+  background-color:#6cc655;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+              0 2px 2px 0 rgba(0,0,0,.14),
+              0 1px 5px 0 rgba(0,0,0,.12);
+  min-width: 88px;
+  height: 36px;
+  margin: 6px 8px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition:0.4s;
+}
+
+.line-button:hover {
+  opacity:0.7;
+}
+
 .md-card{
   width: 90%;
   margin-top: 70px;
@@ -151,6 +198,10 @@ a {
 }
 .md-field{
   height: 10px;
+  margin-bottom: 10px;
+}
+.md-has-textarea{
+  height: 150px;
   margin-bottom: 10px;
 }
 

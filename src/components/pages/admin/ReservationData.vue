@@ -4,6 +4,7 @@
       <md-table-row slot="md-table-row" slot-scope="{ item }">
         <md-table-cell md-label="店名" md-sort-by="shop">{{ item.shopName }}</md-table-cell>
         <md-table-cell md-label="名前" md-sort-by="name">{{ item.staffName }}</md-table-cell>
+        <md-table-cell md-label="ゲスト" md-sort-by="guestName">{{ item.guestName }}</md-table-cell>
         <md-table-cell md-label="人数" md-sort-by="email">{{ item.people }}</md-table-cell>
         <md-table-cell md-label="日付" md-sort-by="Date">{{ item.date }}　{{item.time}}〜</md-table-cell>
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell>

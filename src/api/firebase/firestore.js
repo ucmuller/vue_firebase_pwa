@@ -5,6 +5,8 @@ import router from '@/router'
 import firebaseConfig from './firebaseConfig'
 import types from '@/store/mutation-types';
 import '@/api/firebase/firebase'
+import Firebase from '@/api/firebase/firebase'
+
 
 
 
@@ -22,7 +24,22 @@ export default {
             'email': data.email,
             'photoURL': data.photoURL,
             'shopName': shopName,
-            'messeage': "ご来店お待ちしています。",
+            'message': "ご来店お待ちしています。",
+            'shopImageURL_1': "",
+            'lineMessage': "仮予約で登録だけしておいたので、内容確認して問題なければ『予約確認』ボタン押して下さい。待ってるねー！",
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            console.log("saveStaffData: success");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+
+    saveGuestData(uid){
+        firestore.collection("guest").doc(uid).set({
+            'guest_uid': uid,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -34,31 +51,62 @@ export default {
     },
 
     changeStaffData(uid, data){
+        if(data.shopImageURL_1){
+            firestore.collection("staff").doc(uid).set({
+                'name': data.name,
+                'shopName': data.shopName,
+                'message': data.message,
+                'shopImageURL_1': data.shopImageURL_1.name ? firebase.auth().currentUser.uid + data.shopImageURL_1.name : data.shopImageName_1,
+            }, { merge: true })
+            .then(function() {
+                Firebase.uploadShopImage(data.shopImageURL_1)
+                console.log("changeStaffData: success",data.shopImageURL_1);
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
+        }else{
+            firestore.collection("staff").doc(uid).set({
+                'name': data.name,
+                'shopName': data.shopName,
+                'message': data.message,
+            }, { merge: true })
+            .then(function() {
+                console.log("changeStaffData: success",data.shopImageURL_1);
+            })
+            .catch(function(error) {
+                console.error("Error writing document: ", error);
+            });
+        }
+    },
+
+    changeLineMessageOfStaffData(uid, data){
         firestore.collection("staff").doc(uid).set({
-            'name': data.name,
-            'shopName': data.shopName,
-            'messeage': data.messeage,
+            'lineMessage': data.lineMessage,
         }, { merge: true })
         .then(function() {
-            console.log("changeStaffData: success");
+            Firebase.uploadShopImage(data.shopImageURL_1)
+            console.log("changeStaffData: success",data.shopImageURL_1);
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);
         });
     },
 
-    saveInviteData(user, data){
-        firestore.collection("invite").doc().set({
+    saveInviteData(user, data ,documentID){
+        firestore.collection("invite").doc(documentID).set({
             'time': data.time,
             'date': data.date,
             'from_uid': user.staff_uid,
             'guestName': data.guestName,
             'people': data.people,
-            'tel': data.tel,
+            'tel': data.tel ? data.tel : '',
             'shopName': user.shopName,
+            'shopImageURL_1': data.shopImageURL_1,
             'staffName': user.name,
             'inviteFlag': true,
-            'messeage': user.messeage,
+            'message': user.message,
+            'lineMessage': data.lineMessage ? data.lineMessage : '',
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
@@ -85,16 +133,17 @@ export default {
         });
     },
 
-    saveReservationData(data, inviteId){
+    saveReservationData(data, inviteId, telNumber){
         firestore.collection("reservation").doc().set({
             'time': data.time,
             'date': data.date,
             'from_uid': data.from_uid,
             'guestName': data.guestName,
             'people': data.people,
-            'tel': data.tel,
+            'tel': telNumber,
             'inviteId': inviteId,
             'reservationFlag': true,
+            'shopImageURL_1': data.shopImageURL_1 ? data.shopImageURL_1 : "",
             'staffName': data.staffName,
             'shopName': data.shopName,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
@@ -115,6 +164,20 @@ export default {
         })
         .then(function() {
             // console.log("new collection written with ID");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+
+    saveReferralData(current_uid, from_uid, data){
+        firestore.collection("referral").doc(current_uid).set({
+            'from_uid': from_uid,
+            'name': data.displayName,
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            // console.log("saveInviteData: Document written with ID");
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);
@@ -152,8 +215,8 @@ export default {
                 }
 
                 inviteDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
@@ -177,14 +240,15 @@ export default {
     
     getStaffEachData(staffId){
         firestore.collection("staff").doc(staffId).onSnapshot(function(doc) {
-            // console.log("getStaffEachData:", doc.data(),staffId)
+            console.log("getStaffEachData")
             store.dispatch('onAuth', doc.data())
         });
     },
 
-    inviteCompletion(id){
+    inviteCompletion(id, telNumber){
         firestore.collection("invite").doc(id).set({
-            'inviteFlag': false
+            'inviteFlag': false,
+            'tel': telNumber
         }, { merge: true })
         .then(function() {
             // console.log("saveInviteData: Document written with ID");
@@ -197,6 +261,7 @@ export default {
     getReservationData(uid){
         firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let reservationDataArray = []
+            let peopleOfReservationData = 0
             querySnapshot.forEach(function(doc) {
                 if(uid == doc.data().from_uid){
                     let data = {
@@ -213,20 +278,22 @@ export default {
                         'createdAt': doc.data().createdAt,
                         'shopName': doc.data().shopName
                     }
+                    peopleOfReservationData += data.people
                     reservationDataArray.push(data);
                     reservationDataArray.sort(function(a,b){
-                        if(a.createdAt < b.createdAt) return -1;
-                        if(a.createdAt > b.createdAt) return 1;
+                        if(a.createdAt < b.createdAt) return 1;
+                        if(a.createdAt > b.createdAt) return -1;
                         return 0;
                     });
-                    // console.log("ok",inviteDataArray)
+
                 }else{
                     // console.log("no data")
                 }
             });
             store.dispatch('reservationData', reservationDataArray)
             store.dispatch('reservationDataLength', reservationDataArray.length)
-            // console.log("reservationData",reservationDataArray)
+            store.dispatch('peopleOfReservationData', peopleOfReservationData)
+            // console.log(peopleOfReservationData)
         });
     },
 
@@ -249,6 +316,11 @@ export default {
                 allStaffDataArray.push(doc.data());
             });
             console.log(allStaffDataArray)
+            allStaffDataArray.sort(function(a,b){
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
+                return 0;
+            });
             store.dispatch('fetchAllStaffData', allStaffDataArray)
         })
     },
@@ -260,6 +332,11 @@ export default {
                 allInviteDataArray.push(doc.data());
             });
             console.log(allInviteDataArray)
+            allInviteDataArray.sort(function(a,b){
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
+                return 0;
+            });
             store.dispatch('fetchAllInviteData', allInviteDataArray)
         })
     },
@@ -267,19 +344,24 @@ export default {
     fetchAllReservationData(){
         firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let allReservationDataArray = []
+            let confirmedGuest = 0
             querySnapshot.forEach(function(doc) {
                 allReservationDataArray.push(doc.data());
+                confirmedGuest += doc.data().people
             });
-            console.log(allReservationDataArray)
+            allReservationDataArray.sort(function(a,b){
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
+                return 0;
+            });
             store.dispatch('fetchAllReservationData', allReservationDataArray)
+            store.dispatch('fetchConfirmedGuest', confirmedGuest)
         })
     },
     getIndividualInviteData(uid){
         firestore.collection("invite").onSnapshot(function(querySnapshot) {
             let inviteDataArray = []
             querySnapshot.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data().from_uid);
                 if(uid == doc.data().from_uid){
                     let data = {
                         'date': doc.data().date,
@@ -298,26 +380,24 @@ export default {
                     inviteDataArray.push(data);
                 }
                 inviteDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
             });
-            store.dispatch('dataChanged', inviteDataArray)            // console.log("inviteDataArray",TrueFlagInviteDataArray)
+            store.dispatch('dataChanged', inviteDataArray)
         });
     },
     getIndividualReservationData(uid){
         firestore.collection("reservation").onSnapshot(function(querySnapshot) {
             let reservationDataArray = []
             querySnapshot.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                // console.log(doc.id, " => ", doc.data().from_uid);
                 if(uid == doc.data().from_uid){
                     let data = {
                         'date': doc.data().date,
                         'email': doc.data().email,
-                        'inviteID': doc.id,
+                        'reservationID': doc.id,
                         'time': doc.data().time,
                         'from_uid': doc.data().from_uid,
                         'guestName': doc.data().guestName,
@@ -331,13 +411,59 @@ export default {
                     reservationDataArray.push(data);
                 }
                 reservationDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
             });
-            store.dispatch('reservationData', reservationDataArray)            // console.log("inviteDataArray",TrueFlagInviteDataArray)
+            store.dispatch('reservationData', reservationDataArray)
+        });
+    },
+    getIndividualReferralData(uid){
+        firestore.collection("referral").onSnapshot(function(querySnapshot) {
+            let referralDataArray = []
+            querySnapshot.forEach(function(doc) {
+                if(uid == doc.data().from_uid){
+                    let data = {
+                        'from_uid': doc.data().from_uid,
+                        'name': doc.data().name,
+                        'createdAt': doc.data().createdAt,
+                    }
+                    referralDataArray.push(data);
+                }
+                referralDataArray.sort(function(a,b){
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
+                    return 0;
+                });
+
+            });
+            store.dispatch('referralData', referralDataArray)
+        });
+    },
+
+    deleteInviteDocument(inviteId){
+        firestore.collection("invite").doc(inviteId).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+    },
+
+    deleteReservationDocument(reservationId){
+        firestore.collection("reservation").doc(reservationId).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
+        });
+    },
+
+    deleteStaffDocument(staff_uid){
+        firestore.collection("staff").doc(staff_uid).delete().then(function() {
+            console.log("Document successfully deleted!");
+        }).catch(function(error) {
+            console.error("Error removing document: ", error);
         });
     },
 
