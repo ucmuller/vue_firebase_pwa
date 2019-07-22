@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="bonus-area">
+  <div v-if="userStatus" class="bonus-area">
     <div class="content-area">
       <div class="content">
         <div class="people">{{numberOfReservation(id)}}</div>
@@ -18,7 +18,7 @@
       </div>
     </div>
   </div>
-  <div v-if="userStatus" >
+  <div v-if="userStatus">
     <md-list class="md-triple-line">
       <div v-for="(data, i) in getData"
             :key="i">
@@ -82,6 +82,7 @@ export default {
     Firebase.onAuth()
     // this.loadingOverlay()
     this.getInviteData()
+    this.getReservationData()
   },
 
   computed: {

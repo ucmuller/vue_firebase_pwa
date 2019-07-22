@@ -3,7 +3,10 @@
     <md-content class="md-elevation-3">
 
       <div class="title">
-        <div class="md-title">Login</div>
+        <div class="md-title">パスワードの再設定</div>
+      </div>
+      <div>
+        <p class="left">アカウントに登録のメールアドレスを入力してください。<br>パスワード再設定用のURLをメールでお送りします。</p>
       </div>
 
       <div class="form">
@@ -15,57 +18,57 @@
           </label>
           <md-input v-model="email" @input="$v.email.$touch" autofocus />
         </md-field>
-
-        <md-field md-has-password>
-          <md-icon>lock</md-icon>
-          <label v-if="$v.password.minLength">Password(6桁以上)</label>
-          <label v-if="!$v.password.minLength">
-            <span class="login-alert">6桁以上で入力して下さい。</span>
-          </label>
-          <md-input v-model="password" type="password"></md-input>
-        </md-field>
       </div>
-      <p class="login-alert center" v-if="loginState == 'The password is invalid or the user does not have a password.'" >パスワードが間違っています。</p>
-      <p class="login-alert center" v-if="loginState == 'There is no user record corresponding to this identifier. The user may have been deleted.'" >このメールアドレスは登録されていません。</p>
+      <div class="login-button">
+        <md-button class="md-raised md-accent" @click="sendPasswordResetEmail" :disabled="$v.$invalid" type="submit">再設定メール送信</md-button>
+      </div>
 
       <div class="login-button">
-        <md-button class="md-raised md-accent" @click="login" :disabled="$v.$invalid" type="submit">Login</md-button>
+        <router-link class="md-raised md-accent" to="/signin">ログインに戻る</router-link>
       </div>
-
-      <div>
-        <router-link class="md-raised md-accent" to="/resetpassword">パスワードをお忘れですか?</router-link>
-      </div>
-
-      <div class="border-line">
-        <md-divider></md-divider>
-      </div>
-
-      <div>
-        <router-link class="md-raised md-accent" to="/signup">アカウント作成はこちら</router-link>
-      </div>
-      
 
       <div class="loading-overlay" v-if="loading">
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
       </div>
 
     </md-content>
+
+    <div class="example-modal-window">
+      <!-- コンポーネント MyModal -->
+      <Modal @close="closeModal" v-if="modal">
+        <!-- default スロットコンテンツ -->
+        <p class="login-alert center" v-if="loginState == 'auth/user-not-found'" >このアドレスはユーザー登録されていません。</p>
+        <p class="login-alert center" v-if="loginState == 'auth/too-many-requests'" >送信回数が上限に達しましたので、しばらくしてからもう一度お試し下さい。</p>
+        <p v-if="loginState == ''">パスワードをリセットするリンクを<br>ucmuller@gmail.com宛にお送りしました。</p>
+        <!-- /default -->
+        <!-- footer スロットコンテンツ -->
+        <template slot="footer">
+          <md-button v-if="loginState == ''" @click="routerPush('/signin')" class="md-raised md-accent">ログイン画面に戻る</md-button>
+          <md-button v-if="loginState == 'auth/user-not-found'" @click="closeModal" class="md-raised md-accent">閉じる</md-button>
+          <md-button v-if="loginState == 'auth/too-many-requests'" @click="closeModal" class="md-raised md-accent">閉じる</md-button>
+        </template>
+        <!-- /footer -->
+      </Modal>
+    </div>
   </div>
 
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import {store} from '@/store/'
 import Firebase from '@/api/firebase/firebase'
 import router from 'vue-router'
+import Modal from '@/components/parts/Modal'
 import { required, minLength, email} from 'vuelidate/lib/validators'
 export default {
   name: 'Signin',
+  components:{Modal},
   data() {
     return {
       email: '',
-      password: '',
       loading: false,
+      modal: false
     }
   },
   validations: {
@@ -74,10 +77,6 @@ export default {
       minLength: minLength(5),
       email
     },
-    password: {
-      required,
-      minLength: minLength(6)
-    }
   },
   created: function(){
     // Firebase.onAuth()
@@ -96,18 +95,24 @@ export default {
   },
 
   methods: {
-    login() {
-      this.$v.$touch()
-      if(!this.$v.$invalid){
-        this.loading = true;
-        Firebase.login(this.email, this.password);
-        setTimeout(() => {
-          this.loading = false;
-        }, 3000);
-      }
+    sendPasswordResetEmail(){
+      Firebase.sendPasswordResetEmail(this.email)
+      this.openModal()
     },
-    logout() {
-      Firebase.logout();
+
+    openModal(){
+      this.modal = true
+
+    },
+
+    closeModal(){
+      this.modal = false
+      this.$store.dispatch('loginState', "")
+    },
+
+    routerPush(router){
+      this.modal = false
+      this.$router.push(router)
     },
 
   }
@@ -139,7 +144,7 @@ a {
 }
 .login-button{
   margin-top: 40px;
-  margin-bottom: 64px;
+  margin-bottom: 16px;
 }
 
 .login-alert {
@@ -153,9 +158,14 @@ a {
   margin-bottom: 30px;
 }
 
+.left{
+  text-align: left;
+  padding: 10px;
+}
+
 .md-content {
   z-index: 2;
-  padding: 40px;
+  padding: 5px;
   width: 100%;
   display: relative;
 }
@@ -187,9 +197,5 @@ a {
 }
 .form__alert {
   color: red;
-}
-.border-line{
-  margin-top: 8px;
-  margin-bottom: 8px;
 }
 </style>

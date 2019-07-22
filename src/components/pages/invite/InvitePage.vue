@@ -17,14 +17,12 @@
           <span>2 miles</span> -->
         </div>
       </md-card-header>
-<!-- 
-      <md-card-content>
-        Shop Detail Shop Detail 
-        Shop Detail Shop Detail 
-      </md-card-content> -->
+
     </md-card-area>
 
     <md-card-content>
+      <h3 v-if="!inviteData.inviteFlag && !userStatus">こちらのご予約は確定しています。</h3>
+      <br>
       <h1 class="md-title">{{inviteData.staffName}}さんからの招待</h1>
       <h2 class="md-subhead">{{inviteData.message}}</h2>
       <div class="card-reservation">
@@ -52,13 +50,33 @@
         <img src="@/assets/share-a.png" alt="" srcset="" width="100%">
       </md-button> -->
       <!-- <button v-if="userStatus" @click="launchLine" class="line-button">LINE送信</button> -->
-      <md-button v-if="inviteFlag && !userStatus" @click="saveReservationData" class="md-raised md-accent">予約を確定</md-button>
+      <md-button v-if="inviteFlag && !userStatus" @click="openModal" class="md-raised md-accent">予約を確定</md-button>
     </div>
     <md-dialog-alert
         :md-active.sync="alert"
         md-title="予約を確定しました。"
         md-content="ご来店お待ちしております。" />
   </md-card>
+  <div class="example-modal-window">
+      <!-- コンポーネント MyModal -->
+    <Modal @close="closeModal" v-if="modal">
+      <!-- default スロットコンテンツ -->
+      <p>確認連絡をする場合がありますので、<br>ご自身の電話番号の入力をおねがいします。</p>
+      <div>
+        <md-field>
+          <md-icon>phone_in_talk</md-icon>
+          <label>電話番号</label>
+          <md-input v-model="telNumber"/>
+        </md-field>
+      </div>
+      <!-- /default -->
+      <!-- footer スロットコンテンツ -->
+      <template slot="footer">
+        <md-button v-if="inviteFlag && !userStatus" @click="saveReservationData" class="md-raised md-accent" :disabled="$v.$invalid">予約を確定</md-button>
+      </template>
+      <!-- /footer -->
+    </Modal>
+  </div>
 </div>
 </template>
 
@@ -67,12 +85,15 @@
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
+import Modal from '@/components/parts/Modal'
+import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+
 // import OAuth from "@/components/OAuth";
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'UserPage',
-
+  // name: 'UserPage',
+  components:{Modal},
   data(){
     return {
       shopName: '',
@@ -86,7 +107,17 @@ export default {
       alert: false,
       inviteFlag: true,
       loading: false,
+      modal: false,
+      telNumber: ''
     }
+  },
+
+   validations: {
+    telNumber: {
+      required,
+      minLength: minLength(10),
+      maxLength: maxLength(12),
+    },
   },
 
   created: function(){
@@ -95,6 +126,7 @@ export default {
     // this.loadingOverlay()
     this.getInviteEachData()
     console.log(document.domain == "localhost")
+    this.signInAnonymously()
   },
 
   computed: {
@@ -136,11 +168,11 @@ export default {
           value: this.$store.getters.inviteData.tel,
           icon: 'phone_in_talk'
         },
-        {
-          text: 'LINEメッセージ',
-          value: this.$store.getters.inviteData.lineMessage,
-          icon: 'message'
-        },
+        // {
+        //   text: 'LINEメッセージ',
+        //   value: this.$store.getters.inviteData.lineMessage,
+        //   icon: 'message'
+        // },
       ]
       return datas
     },
@@ -168,11 +200,15 @@ export default {
       Firestore.getInviteEachData(this.$route.params.id)
     },
     saveReservationData(){
+      this.$v.$touch()
+      if(!this.$v.$invalid){
+        Firestore.saveReservationData(this.$store.getters.inviteData, this.$route.params.id, this.telNumber)
+        Firestore.inviteCompletion(this.$route.params.id, this.telNumber)
+        this.alert = true
+        this.inviteFlag = false
+        this.closeModal()
+      }
       // console.log(this.$store.getters.inviteData, this.$route.params.id)
-      Firestore.saveReservationData(this.$store.getters.inviteData, this.$route.params.id)
-      Firestore.inviteCompletion(this.$route.params.id)
-      this.alert = true
-      this.inviteFlag = false
     },
     routerPush(router){
       this.$router.push(router)
@@ -186,6 +222,15 @@ export default {
     launchLine(){
     location.href = this.url;
     },
+    openModal(){
+      this.modal = true
+    },
+    closeModal(){
+      this.modal = false
+    },
+    signInAnonymously(){
+      Firebase.signInAnonymously()
+    }
     // getShopImageURL(){
     //   Firebase.getShopImageURL(this.$store.getters.inviteData.shopImageURL_1)
     // }
@@ -266,6 +311,16 @@ a {
 
 .md-button.md-theme-default.md-raised:not([disabled]).md-accent {
   color: white;
+}
+.md-field.md-theme-default:before {
+    background-color: #F8F2E3;
+    background-color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused label {
+    color: var(--md-theme-default-accent, #FB6359);
+}
+.md-field.md-theme-default.md-focused > .md-icon {
+    color: var(--md-theme-default-accent, #FB6359);
 }
 
 button.md-button.md-theme-default.md-primary {

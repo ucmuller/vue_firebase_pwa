@@ -99,6 +99,8 @@ export default {
     firebase.auth().signInWithEmailAndPassword(email,password)
     .then(currentUser => {
       Firestore.getStaffEachData(currentUser.user.uid)
+      Firestore.getInviteData(currentUser.user.uid)
+      Firestore.getReservationData(currentUser.user.uid)
       store.dispatch('loginState', "")
       router.push("/")
     },
@@ -193,4 +195,32 @@ export default {
       console.log(error)
     });
   },
+  sendPasswordResetEmail(emailAddress){
+    var actionCodeSettings = {
+      url: 'https://reserve-beta.firebaseapp.com/signin',
+    };
+    firebase.auth().sendPasswordResetEmail(emailAddress, actionCodeSettings).then(function() {
+      // Email sent.
+      console.log("sucessfully sent email.")
+    }).catch(function(error) {
+     console.log(error)
+     store.dispatch('loginState', error.code)
+    });
+  },
+
+  signInAnonymously(){
+    firebase.auth().signInAnonymously()
+    .catch( (error) => {
+      console.log("signInAnonymously",error);
+    });
+
+    firebase.auth().onAuthStateChanged( (user) => {
+      if ( user ) {
+        let uid = user.uid;
+        console.log("signInAnonymously",uid);
+      }
+    });
+  }
+
+
 }

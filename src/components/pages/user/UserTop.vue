@@ -26,17 +26,17 @@
               <span class="md-list-item-text">{{user.email}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item v-if="inviteAllDataLength">
               <md-icon class="md-accent">group_add</md-icon>
               <span class="md-list-item-text">招待数：{{inviteAllDataLength}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item v-if="inviteDataLength">
               <md-icon class="md-accent">people_outline</md-icon>
               <span class="md-list-item-text">招待中：{{inviteDataLength}}</span>
             </md-list-item>
 
-            <md-list-item>
+            <md-list-item >
               <md-icon class="md-accent">people</md-icon>
               <span class="md-list-item-text">確約数：{{reservationdataLength}}</span>
             </md-list-item>
@@ -78,7 +78,7 @@ export default {
     Firebase.onAuth()
     this.getInviteData()
     this.getReservationData()
-    console.log(Vuelidate)
+    // console.log(Vuelidate)
   },
 
   computed: {

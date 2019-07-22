@@ -37,6 +37,19 @@ export default {
         });
     },
 
+    saveGuestData(uid){
+        firestore.collection("guest").doc(uid).set({
+            'guest_uid': uid,
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            console.log("saveStaffData: success");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+
     changeStaffData(uid, data){
         if(data.shopImageURL_1){
             firestore.collection("staff").doc(uid).set({
@@ -120,14 +133,14 @@ export default {
         });
     },
 
-    saveReservationData(data, inviteId){
+    saveReservationData(data, inviteId, telNumber){
         firestore.collection("reservation").doc().set({
             'time': data.time,
             'date': data.date,
             'from_uid': data.from_uid,
             'guestName': data.guestName,
             'people': data.people,
-            'tel': data.tel,
+            'tel': telNumber,
             'inviteId': inviteId,
             'reservationFlag': true,
             'shopImageURL_1': data.shopImageURL_1 ? data.shopImageURL_1 : "",
@@ -202,8 +215,8 @@ export default {
                 }
 
                 inviteDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
@@ -227,14 +240,15 @@ export default {
     
     getStaffEachData(staffId){
         firestore.collection("staff").doc(staffId).onSnapshot(function(doc) {
-            // console.log("getStaffEachData:", doc.data(),staffId)
+            console.log("getStaffEachData")
             store.dispatch('onAuth', doc.data())
         });
     },
 
-    inviteCompletion(id){
+    inviteCompletion(id, telNumber){
         firestore.collection("invite").doc(id).set({
-            'inviteFlag': false
+            'inviteFlag': false,
+            'tel': telNumber
         }, { merge: true })
         .then(function() {
             // console.log("saveInviteData: Document written with ID");
@@ -267,8 +281,8 @@ export default {
                     peopleOfReservationData += data.people
                     reservationDataArray.push(data);
                     reservationDataArray.sort(function(a,b){
-                        if(a.createdAt < b.createdAt) return -1;
-                        if(a.createdAt > b.createdAt) return 1;
+                        if(a.createdAt < b.createdAt) return 1;
+                        if(a.createdAt > b.createdAt) return -1;
                         return 0;
                     });
 
@@ -303,8 +317,8 @@ export default {
             });
             console.log(allStaffDataArray)
             allStaffDataArray.sort(function(a,b){
-                if(a.createdAt < b.createdAt) return -1;
-                if(a.createdAt > b.createdAt) return 1;
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
                 return 0;
             });
             store.dispatch('fetchAllStaffData', allStaffDataArray)
@@ -319,8 +333,8 @@ export default {
             });
             console.log(allInviteDataArray)
             allInviteDataArray.sort(function(a,b){
-                if(a.createdAt < b.createdAt) return -1;
-                if(a.createdAt > b.createdAt) return 1;
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
                 return 0;
             });
             store.dispatch('fetchAllInviteData', allInviteDataArray)
@@ -336,8 +350,8 @@ export default {
                 confirmedGuest += doc.data().people
             });
             allReservationDataArray.sort(function(a,b){
-                if(a.createdAt < b.createdAt) return -1;
-                if(a.createdAt > b.createdAt) return 1;
+                if(a.createdAt < b.createdAt) return 1;
+                if(a.createdAt > b.createdAt) return -1;
                 return 0;
             });
             store.dispatch('fetchAllReservationData', allReservationDataArray)
@@ -366,8 +380,8 @@ export default {
                     inviteDataArray.push(data);
                 }
                 inviteDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
@@ -397,8 +411,8 @@ export default {
                     reservationDataArray.push(data);
                 }
                 reservationDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
@@ -419,8 +433,8 @@ export default {
                     referralDataArray.push(data);
                 }
                 referralDataArray.sort(function(a,b){
-                    if(a.createdAt < b.createdAt) return -1;
-                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return 1;
+                    if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
 
