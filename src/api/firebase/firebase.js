@@ -35,7 +35,7 @@ export default {
           let currentUserData = currentUser.user
           let currentUserID = currentUserData.uid
           Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
-          // console.log(currentUserData)
+          console.log(currentUserData)
       })
       .then(()=>{
         this.login(data.email,data.password)
