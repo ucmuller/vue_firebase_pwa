@@ -1,8 +1,8 @@
 <template>
 <div class="page-container">
   <div class="md-layout-column">
-    <md-toolbar class="md-primary toolbar">
-      <span class="md-title">RNDV</span>
+    <md-toolbar class="toolbar">
+      <img src="@/assets/img/logo.png" alt="" width="20%">
       <!-- <md-button v-if="userStatus" @click="test" class="logout-button">test</md-button>
       <md-button v-if="userStatus" @click="logout" class="logout-button">ログアウト</md-button> -->
     <div>
@@ -62,7 +62,7 @@ export default {
   position: fixed;
   top:0px;
   width: 100%;
-  z-index: 2;
+  z-index: 10;
 }
 
 .drawer{
@@ -72,7 +72,8 @@ export default {
 
 .toolbar{
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
+  max-width: 769px;
 }
 
 

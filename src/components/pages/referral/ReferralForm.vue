@@ -1,19 +1,19 @@
 <template>
 <div>
   <div v-if="userStatus" class="main">
-    <md-button @click="launchLine" class="line-button" disabled>スタッフを招待</md-button>
-    <p>coming soon...</p>
+    <md-button @click="launchLine" class="line-button">スタッフを招待</md-button>
+    <!-- <p>coming soon...</p> -->
     <md-list class="md-triple-line">
       <div v-for="(data, i) in referralData"
             :key="i">
         <md-list-item v-if="data">
             <md-avatar>
-              <md-button class="md-icon-button md-raised md-primary">
-                <md-icon class="md-accent">contact_mail</md-icon>
+              <md-button class="md-icon-button md-primary">
+                <md-icon class="md-primary">done_outline</md-icon>
               </md-button>
             </md-avatar>
             <div class="md-list-item-text">
-              <span>{{data.name}}様</span>
+              <span>{{data.name}}さん</span>
             </div>
         </md-list-item>
       <md-divider v-if="data" class="md-inset"></md-divider>
@@ -50,10 +50,10 @@ export default {
       let domain = document.domain
       console.log(domain)
       if(domain == "localhost"){
-        return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
+        return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/referralpage/${this.id}`
         // return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
       } else {
-        return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
+        return `https://social-plugins.line.me/lineit/share?url=https://${domain}/referralpage/${this.id}`
         // return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
       }
     },

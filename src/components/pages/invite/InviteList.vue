@@ -22,32 +22,36 @@
     <md-list class="md-triple-line">
       <div v-for="(data, i) in getData"
             :key="i">
+            
         <md-list-item v-if="data.inviteFlag == false">
             <md-avatar>
-              <md-button class="md-icon-button md-raised md-primary">
-                <md-icon class="md-accent">contact_mail</md-icon>
+              <md-button class="md-icon-button md-primary">
+                <md-icon class="md-primary">group</md-icon>
               </md-button>
             </md-avatar>
             <div class="md-list-item-text">
               <span>{{data.guestName}}様　{{data.people}}名</span>
               <span>{{data.date}}　{{data.time}}</span>
             </div>
-            <md-button @click="routerPush({name:'InvitePage',params:{id:data.inviteID}})" class="md-raised md-accent">確定</md-button>
+            <md-button @click="routerPush({name:'InvitePage',params:{id:data.inviteID}})" class="md-raised md-primary">確定</md-button>
         </md-list-item>
+        
         <md-list-item v-if="data.inviteFlag == true">
             <md-avatar>
-              <md-button class="md-icon-button md-raised md-primary">
-                <md-icon class="md-accent">contact_mail</md-icon>
+              <md-button class="md-icon-button md-primary">
+                <md-icon class="md-primary">group</md-icon>
               </md-button>
             </md-avatar>
             <div class="md-list-item-text">
               <span>{{data.guestName}}様　{{data.people}}名</span>
               <span>{{data.date}}　{{data.time}}</span>
             </div>
-            <md-button @click="routerPush({name:'InvitePage',params:{id:data.inviteID}})" class="md-raised md-accent">招待中</md-button>
+            <md-button @click="routerPush({name:'InvitePage',params:{id:data.inviteID}})" class="md-raised md-primary">招待中</md-button>
         </md-list-item>
-      <md-divider v-if="data.inviteFlag" class="md-inset"></md-divider>
+        
+        <md-divider  class="md-inset"></md-divider>
       </div>
+      
     </md-list>
   </div>
   <div v-else>

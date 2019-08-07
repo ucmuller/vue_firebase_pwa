@@ -14,7 +14,7 @@
           <label v-if="!$v.name.required">
             <span>名前(※必須)</span>
           </label>
-          <md-input v-model="contactForm.name" autofocus></md-input>
+          <md-input v-model="name" autofocus></md-input>
         </md-field>
 
         <md-field>
@@ -23,34 +23,33 @@
           <label v-if="!$v.email.email">
             <span class="login-alert">形式が間違っています。</span>
           </label>
-          <md-input v-model="contactForm.email" autofocus></md-input>
+          <md-input v-model="email"></md-input>
         </md-field>
+
+        <div>
+          <md-checkbox class="left" v-model="radio" :value="true">退会希望</md-checkbox>
+        </div>
 
 
         <md-field>
-          <label>お問い合わせ内容</label>
-          <md-textarea class="textarea" @input="$v.messageText.$touch" v-model="contactForm.messageText"></md-textarea>
+          <label>内容・理由(※必須)</label>
+          <md-textarea class="textarea" v-model="contents"></md-textarea>
         </md-field>
 
       </div>
-      <p class="login-alert center" v-if="loginState == 'The password is invalid or the user does not have a password.'" >パスワードが間違っています。</p>
-      <p class="login-alert center" v-if="loginState == 'There is no user record corresponding to this identifier. The user may have been deleted.'" >このメールアドレスは登録されていません。</p>
-
       <div class="login-button">
-        <md-button class="md-raised md-accent" @click="sendMessage" :disabled="$v.$invalid" type="submit">送信</md-button>
+        <md-button class="md-raised md-accent" @click="sendMail" :disabled="$v.$invalid" type="submit">送信</md-button>
       </div>
+
+     <div class="border-line">
+        <md-divider></md-divider>
+      </div>
+
 
       <div>
         <button class="button-color" @click="logout">ログアウト</button>
       </div>
 
-      <div class="border-line">
-        <md-divider></md-divider>
-      </div>
-
-      <div>
-        <router-link class="md-raised md-accent" to="/signup">アカウント削除はこちら</router-link>
-      </div>
       
 
       <div class="loading-overlay" v-if="loading">
@@ -58,6 +57,23 @@
       </div>
 
     </md-content>
+      <div class="example-modal-window">
+        <!-- コンポーネント MyModal -->
+        <Modal @close="closeModal" v-if="modal">
+          <!-- default スロットコンテンツ -->
+          <!-- <p class="login-alert center" v-if="loginState == 'auth/user-not-found'" >このアドレスはユーザー登録されていません。</p>
+          <p class="login-alert center" v-if="loginState == 'auth/too-many-requests'" >送信回数が上限に達しましたので、しばらくしてからもう一度お試し下さい。</p> -->
+          <p>{{ snackBar.message}}</p>
+          <!-- /default -->
+          <!-- footer スロットコンテンツ -->
+          <template slot="footer">
+            <md-button @click="closeModal" class="md-raised md-accent">閉じる</md-button>
+            <!-- <md-button v-if="loginState == 'auth/user-not-found'" @click="closeModal" class="md-raised md-accent">閉じる</md-button>
+            <md-button v-if="loginState == 'auth/too-many-requests'" @click="closeModal" class="md-raised md-accent">閉じる</md-button> -->
+          </template>
+          <!-- /footer -->
+        </Modal>
+      </div>
   </div>
 
 </template>
@@ -65,18 +81,26 @@
 <script>
 import { mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
+import firebase from '@firebase/app';
 import router from 'vue-router'
+import Modal from '@/components/parts/Modal'
 import { required, minLength, email} from 'vuelidate/lib/validators'
 export default {
   name: 'Signin',
+  components:{Modal},
   data() {
     return {
-      contactForm: {
-        email: '',
-        messageText: '',
-        name: ''
+      email: '',
+      contents: '',
+      name: '',
+      loading: '',
+      snackBar: {
+        show: false,
+        color: '',
+        message: ''
       },
-      loading: ''
+      modal: false,
+      radio: false
     }
   },
   validations: {
@@ -89,7 +113,7 @@ export default {
       minLength: minLength(5),
       email
     },
-    messageText: {
+    contents: {
       required,
       minLength: minLength(1),
     },
@@ -113,12 +137,69 @@ export default {
       Firebase.logout();
     },
 
-    sendMessage() {
+    // sendMessage() {
+    //   this.$v.$touch()
+    //   if(!this.$v.$invalid){
+    //     console.log("aaaa")
+    //   }
+    // },
+
+    sendMail() {
       this.$v.$touch()
-      if(!this.$v.$invalid){
-        console.log("aaaa")
+        if (!this.$v.$invalid) {
+          let contactForm = {
+            email: this.email,
+            contents: this.contents,
+            name: this.name,
+            unsubscribe: this.radio ? "退会希望している" : "退会希望していない" 
+          }
+          this.loading = true
+          const mailer = firebase.functions().httpsCallable('sendMail')
+
+          mailer(contactForm)
+            .then(() => {
+            
+              this.showSnackBar(
+                'success',
+                'お問い合わせありがとうございます。送信完了しました。'
+              )
+              this.resetText()
+              this.openModal()
+            })
+            .catch(err => {
+              this.showSnackBar(
+                'error',
+                '送信に失敗しました。時間をおいて再度お試しください。'
+              )
+              console.log(err)
+            })
+            .finally(() => {
+              this.loading = false
+            })
+        }
+      },
+
+      showSnackBar(color, message) {
+        this.snackBar.message = message
+        this.snackBar.color = color
+        this.snackBar.show = true
+      },
+
+      openModal(){
+        this.modal = true
+      },
+
+      closeModal(){
+        this.modal = false
+        this.resetText()
+      },
+
+      resetText(){
+        this.email = ""
+        this.name = ""
+        this.contents = ""
+        this.radio = false
       }
-    },
 
   }
   

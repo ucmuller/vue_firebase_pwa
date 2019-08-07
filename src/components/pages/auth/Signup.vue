@@ -22,7 +22,7 @@
           <label v-if="!$v.shopName.required">
             <span>店舗名(※必須)</span>
           </label>
-          <md-input v-model="shopName" autofocus></md-input>
+          <md-input v-model="shopName"></md-input>
         </md-field>
         
         <md-field>
@@ -31,7 +31,7 @@
           <label v-if="!$v.email.email">
             <span class="login-alert">形式が間違っています。</span>
           </label>
-          <md-input v-model="email" autofocus></md-input>
+          <md-input v-model="email"></md-input>
         </md-field>
 
         <md-field md-has-password>

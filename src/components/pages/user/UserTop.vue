@@ -7,42 +7,42 @@
         <div>
           <md-list class="md-double-line">
             <md-list-item>
-              <md-icon class="md-accent">store_mall_directory</md-icon>
+              <md-icon class="md-primary">store_mall_directory</md-icon>
               <span class="md-list-item-text">{{user.shopName}}</span>
             </md-list-item>
 
             <md-list-item>
-              <md-icon class="md-accent">account_circle</md-icon>
+              <md-icon class="md-primary">account_circle</md-icon>
               <span class="md-list-item-text">{{user.name}}</span>
             </md-list-item>
 
             <md-list-item v-if="user.message">
-              <md-icon class="md-accent">comment</md-icon>
+              <md-icon class="md-primary">comment</md-icon>
               <span class="md-list-item-text">{{user.message}}</span>
             </md-list-item>
 
             <md-list-item>
-              <md-icon class="md-accent">email</md-icon>
+              <md-icon class="md-primary">email</md-icon>
               <span class="md-list-item-text">{{user.email}}</span>
             </md-list-item>
 
             <md-list-item v-if="inviteAllDataLength">
-              <md-icon class="md-accent">group_add</md-icon>
+              <md-icon class="md-primary">group_add</md-icon>
               <span class="md-list-item-text">招待数：{{inviteAllDataLength}}</span>
             </md-list-item>
 
             <md-list-item v-if="inviteDataLength">
-              <md-icon class="md-accent">people_outline</md-icon>
+              <md-icon class="md-primary">people_outline</md-icon>
               <span class="md-list-item-text">招待中：{{inviteDataLength}}</span>
             </md-list-item>
 
             <md-list-item >
-              <md-icon class="md-accent">people</md-icon>
+              <md-icon class="md-primary">people</md-icon>
               <span class="md-list-item-text">確約数：{{reservationdataLength}}</span>
             </md-list-item>
           </md-list>
           <md-card-actions>
-            <md-button class="md-raised md-accent" @click="routerPush('/userupdate')">表示名変更</md-button>
+            <md-button class="md-raised md-primary" @click="routerPush('/userupdate')">表示名変更</md-button>
           </md-card-actions>
         </div>
     </md-card>

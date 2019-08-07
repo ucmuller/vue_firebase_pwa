@@ -7,12 +7,13 @@ import router from '@/router'
 import types from '@/store/mutation-types';
 import Firestore from '@/api/firebase/firestore'
 
-
 export default {
   init(){
     firebase.initializeApp(firebaseConfig)
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
   },
+
+  
 
   signup(data){
     firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
@@ -220,7 +221,8 @@ export default {
         console.log("signInAnonymously",uid);
       }
     });
-  }
+  },
+
 
 
 }

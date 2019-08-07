@@ -185,7 +185,7 @@ a {
 .md-field.md-theme-default.md-focused > .md-icon {
     color: var(--md-theme-default-accent, #FB6359);
 }
-.form__alert {
+.form_alert {
   color: red;
 }
 .border-line{

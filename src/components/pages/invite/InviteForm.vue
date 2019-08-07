@@ -17,14 +17,14 @@
           </md-field>
           <md-field>
             <label>日付</label>
-            <md-select v-model="data.date" id="date">
+            <md-select v-model="data.date" id="date" required>
               <md-option :value="today">本日:{{today}}</md-option>
               <md-option :value="tomorrow">明日:{{tomorrow}}</md-option>
             </md-select>
           </md-field>
           <md-field>
             <label>時間</label>
-            <md-select v-model="data.time" id="time">
+            <md-select v-model="data.time" id="time" required>
               <md-option 
                 v-for="(time, i) in times"
                 :key="i" 
@@ -34,11 +34,11 @@
           </md-field>
           <md-field>
             <label>ゲスト名</label>
-            <md-input v-model="data.guestName"></md-input>
+            <md-input v-model="data.guestName" required></md-input>
           </md-field>
           <md-field>
             <label>人数</label>
-            <md-select v-model="data.people" id="people">
+            <md-select v-model="data.people" id="people" required>
               <md-option 
                 v-for="(people, i) in peoples"
                 :key="i" 
@@ -47,7 +47,7 @@
           </md-field>
           <md-field>
             <label>TEL</label>
-            <md-input v-model="data.tel"></md-input>
+            <md-input v-model="data.tel" required></md-input>
           </md-field>
           <md-field>
             <label>メッセージ(※自由に編集できます)</label>
@@ -56,7 +56,8 @@
           </div>
         </div>
       </md-card-content>
-      <button @click="saveInviteData" class="line-button">LINE送信</button>
+      <md-button @click="saveInviteData" class="line-button" :disabled="activateSubmit">LINE送信</md-button>
+      <p class="form_alert" v-if="activateSubmit">*の部分は必須入力</p>
         <!-- <router-link :to="{name:'InviteList',params:{id:user.staff_uid}}">InviteList!</router-link> -->
     </md-card>
   <div v-else>
@@ -70,6 +71,7 @@ import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
 import router from '@/router'
 import { mapGetters } from 'vuex'
+import { required, minLength } from 'vuelidate/lib/validators'
 
 export default {
   name: 'InviteForm',
@@ -124,6 +126,14 @@ export default {
         return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
       }
     },
+
+    activateSubmit(){
+      if(this.data.tel != ""  && this.data.date != "" && this.data.time != "" && this.data.guestName != "" && this.people != ""){
+        return false
+      } else {
+        return true
+      }
+    } 
   },
   watch: {
     shopImageURL() {
@@ -148,6 +158,7 @@ export default {
       Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
     },
     launchLine(){
+      this.$v.$touch()
       location.href = this.url;
     },
   }
@@ -221,5 +232,8 @@ a {
 }
 .md-field.md-theme-default.md-focused > .md-icon {
     color: var(--md-theme-default-accent, #FB6359);
+}
+.form_alert {
+  color: red;
 }
 </style>

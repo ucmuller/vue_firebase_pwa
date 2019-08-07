@@ -1,6 +1,6 @@
 {
-  "name": "rendezvous",
-  "short_name": "rendezvous",
+  "name": "RNDV",
+  "short_name": "RNDV",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FB6359",
@@ -8,12 +8,12 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/static/img/icons/rendezvous_icon.png",
+      "src": "/static/img/icons/RNDV_logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/static/img/icons/rendezvous_icon.png",
+      "src": "/static/img/icons/RNDV_logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }
