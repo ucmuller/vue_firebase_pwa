@@ -1,11 +1,19 @@
 <template>
-  <div class="page-container md-layout-column">
+<div class="page-container">
+  <div class="md-layout-column">
     <md-toolbar class="md-primary toolbar">
-      <span class="md-title">Rendezvous</span>
-      <md-button v-if="userStatus && (user.email == 'ucmuller@gmail.com' || user.email == 'str531@gmail.com')" @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</md-button>
-      <md-button v-if="userStatus" @click="logout" class="logout-button">logout</md-button>
+      <span class="md-title">RNDV</span>
+      <!-- <md-button v-if="userStatus" @click="test" class="logout-button">test</md-button>
+      <md-button v-if="userStatus" @click="logout" class="logout-button">ログアウト</md-button> -->
+    <div>
+      <!-- <button v-if="userStatus && (user.email == 'ucmuller@gmail.com' || user.email == 'str531@gmail.com')" @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</button>
+      <button v-if="userStatus" @click="test" class="logout-button">info</button>
+      <button v-if="userStatus" @click="logout" class="logout-button">logout</button> -->
+      <button @click="routerPush('/settings')"><md-icon >settings</md-icon></button>
+    </div>
     </md-toolbar>
   </div>
+    </div>
 </template>
 
 <script>
@@ -22,6 +30,7 @@ export default {
       photoURL: '',
       data:'',
       userdata: '',
+      showSidepanel: false
     }
   },
   created: function(){
@@ -40,6 +49,9 @@ export default {
     routerPush(router){
       this.$router.push(router)
     },
+    test() {
+      console.log("a")
+    }
   }
 }
 
@@ -50,7 +62,7 @@ export default {
   position: fixed;
   top:0px;
   width: 100%;
-  z-index: 6;
+  z-index: 2;
 }
 
 .drawer{

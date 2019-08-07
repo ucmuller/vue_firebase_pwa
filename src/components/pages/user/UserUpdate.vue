@@ -33,7 +33,7 @@
             </v-input>
           </md-card-header>
           <md-button class="md-raised md-accent" @click="changeStaffProfile">変更</md-button>
-          <md-button class="md-raised md-primary" @click="routerPush('/usertop')">キャンセル</md-button>
+          <md-button class="md-raised md-primary" @click="routerPush('/')">キャンセル</md-button>
       </md-card>
       <div class="loading-overlay" v-if="loading">
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>

@@ -229,7 +229,12 @@ export default {
       this.modal = false
     },
     signInAnonymously(){
-      Firebase.signInAnonymously()
+      if(!this.userStatus){
+        Firebase.signInAnonymously()
+      }else{
+        console.log("user")
+      }
+      
     }
     // getShopImageURL(){
     //   Firebase.getShopImageURL(this.$store.getters.inviteData.shopImageURL_1)

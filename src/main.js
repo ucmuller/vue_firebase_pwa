@@ -15,12 +15,16 @@ import 'vue-material/dist/theme/default.css'
 import { OAuth } from 'oauthio-web'
 import './assets/css/theme.scss'
 import Vuelidate from 'vuelidate'
+import VueAnalytics from 'vue-analytics'
 
 
 
 
 
-
+Vue.use(VueAnalytics, {
+  id: 'UA-145069953-2',
+  router
+})
 Vue.use(Vuetify)
 Vue.use(VueMaterial)
 Vue.use(Vuelidate)

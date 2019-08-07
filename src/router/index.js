@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import UserTop from '@/components/pages/user/UserTop'
 import Signup from '@/components/pages/auth/Signup'
 import Signin from '@/components/pages/auth/Signin'
+import Settings from '@/components/pages/auth/Settings'
 import ResetPassword from '@/components/pages/auth/ResetPassword'
 import InviteForm from '@/components/pages/invite/InviteForm'
 import UserPage from '@/components/pages/user/UserPage'
@@ -67,6 +68,11 @@ let router =  new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings
     },
     {
       path: '/resetpassword',
