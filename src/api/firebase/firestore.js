@@ -183,6 +183,18 @@ export default {
             console.error("Error writing document: ", error);
         });
     },
+    saveFromLPData(current_uid, data){
+        firestore.collection("fromLP").doc(current_uid).set({
+            'name': data.displayName,
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            // console.log("saveInviteData: Document written with ID");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
 
     getInviteData(uid){
         firestore.collection("invite").onSnapshot(function(querySnapshot) {

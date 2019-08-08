@@ -93,6 +93,45 @@ export default {
       // alert("もう一度正しく入力してください。")
     })
   },
+  signupFromLP(data){
+    firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
+    .then((user) => {
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+    })
+    .then(()=>{
+      this.addUserDate(data)
+      console.log('signup: success')
+    })
+    .then(()=>{
+      this.upload(data.uploadFile)
+      // router.push('/signin')
+    })
+    .then(()=>{
+      console.log("uplaod後")
+      firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+      .then(
+        (currentUser) => {
+          let currentUserData = currentUser.user
+          let currentUserID = currentUserData.uid
+          Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
+          Firestore.saveFromLPData(currentUserID, currentUserData)
+          // console.log(currentUserData)
+      })
+      .then(()=>{
+        this.login(data.email,data.password)
+        store.dispatch('loginState', "")
+      })
+      // router.push('/signin')
+    },
+    (err) => {
+      let errorCode = err.code
+      let errorMessage = err.message
+      console.log("signupWithReferral",errorMessage)
+      store.dispatch('loginState', errorMessage)
+
+      // alert("もう一度正しく入力してください。")
+    })
+  },
 
   login(email,password){
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)

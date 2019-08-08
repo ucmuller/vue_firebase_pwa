@@ -56,4 +56,7 @@ export default {
 .md-field.md-theme-default.md-focused > .md-icon {
     color: var(--md-theme-default-accent, #FB6359);
 }
+.md-steppers.md-horizontal.md-alternative .md-stepper-header {
+    height: 50px;
+}
 </style>
