@@ -1,14 +1,17 @@
 <template>
-  <md-card class="md-card" v-if="userStatus">
-      <md-card-area md-inset>
+  <md-card class="md-card" v-if="userStatus && user">
+      <!-- <md-card-area md-inset>
         <md-card-media md-ratio="16:9">
           <img v-if="data.shopImageURL_1" :src="data.shopImageURL_1" alt="Coffee House">
           <img v-else src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
         </md-card-media>
-      </md-card-area>
+      </md-card-area> -->
 
       <md-card-content>
-        <h3 class="md-subheading">Invite Detail</h3>
+        <div class="invite-card-title">
+          <h2 class="center">代理予約をしてLINEで送信</h2>
+          <p class="form_alert">※LINE送信後、予約が確定すると<br>キャッシュになります。</p>
+        </div>
         <div class="card-reservation">
           <div class="md-layout-item">
           <md-field class="md-field">
@@ -42,12 +45,13 @@
               <md-option 
                 v-for="(people, i) in peoples"
                 :key="i" 
-                :value="people">{{people}}
-              </md-option>            </md-select>
+                :value="people">{{peoplesString[i]}}
+              </md-option>
+            </md-select>
           </md-field>
           <md-field>
             <label>TEL</label>
-            <md-input v-model="data.tel" required></md-input>
+            <md-input v-model="data.tel"></md-input>
           </md-field>
           <md-field>
             <label>メッセージ(※自由に編集できます)</label>
@@ -78,14 +82,14 @@ export default {
   data() {
     return {
       data: {
-        tel: '',
+        tel: this.$store.getters.user.shopTelNumber,
         date: '',
         time:'',
         guestName:'',
         people:'',
         shopName: '',
         lineMessage: this.$store.getters.user.lineMessage,
-        shopImageURL_1: this.$store.getters.shopImageURL
+        shopImageURL_1: ''
       },
       today:`${new Date().getMonth()+1}/${new Date().getDate()}`,
       tomorrow: `${new Date().getMonth()+1}/${new Date().getDate() + 1}`,
@@ -99,21 +103,34 @@ export default {
         "22:00","22:30",
         "23:00","23:30",
         "24:00","24:30",
+        "25:00","25:30",
+        "26:00","26:30",
+        "27:00","27:30",
+        "28:00"
         ],
-      peoples: [1,2,3,4,5,6,7,8,9,10],
+      peoples: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
+      peoplesString: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25名以上"],
       documentID: ''
     }
   },
   created: function(){
     Firebase.onAuth()
+    // console.log(this.$store.getters.user)
     this.getShopImageURL()
-    console.log(this.userStatus)
+    this.getInviteData()
+    this.getReservationData()
+    this.data.lineMessage = this.$store.getters.user.lineMessage
+    // console.log(this.userStatus)
   },
   computed: {
     ...mapGetters({
       userStatus: 'isSignedIn',
       user: 'user',
-      shopImageURL: 'shopImageURL'
+      shopImageURL: 'shopImageURL',
+      inviteAllDataLength: 'inviteAllDataLength',
+      reservationdataLength: 'reservationdataLength',
+      inviteDataLength: 'inviteDataLength',
+      peopleOfReservationData: 'peopleOfReservationData'
     }),
     url(){
       let domain = document.domain
@@ -126,21 +143,23 @@ export default {
         return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
       }
     },
-
     activateSubmit(){
-      if(this.data.tel != ""  && this.data.date != "" && this.data.time != "" && this.data.guestName != "" && this.people != ""){
+      if(this.data.date != "" && this.data.time != "" && this.data.guestName != "" && this.people != ""){
         return false
       } else {
         return true
       }
-    } 
+    },
+    test() {
+          // console.log(this.$store.getters.user)
+    }
   },
   watch: {
-    shopImageURL() {
-      this.data.shopImageURL_1 = this.$store.getters.shopImageURL
-      this.getShopImageURL()
-      console.log("shopImage更新");
-    },
+    // shopImageURL() {
+    //   this.data.shopImageURL_1 = this.$store.getters.shopImageURL
+    //   this.getShopImageURL()
+    //   console.log("shopImage更新");
+    // },
   },
   methods: {
     logout() {
@@ -154,12 +173,23 @@ export default {
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
     },
     getShopImageURL(){
-      console.log(this.$store.getters.user.shopImageURL_1)
-      Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
+      // console.log(this.$store.getters.user.shopImageURL_1)
+      // Firebase.getShopImageURL(this.$store.getters.user.shopImageURL_1)
     },
     launchLine(){
-      this.$v.$touch()
+      // this.$v.$touch()
       location.href = this.url;
+    },
+        reject(){
+      if(!this.userStatus){
+        this.$router.push("/signin")
+      }
+    },
+    getInviteData(){
+      Firestore.getInviteData(this.user.staff_uid)
+    },
+    getReservationData(){
+      Firestore.getReservationData(this.user.staff_uid)
     },
   }
 }
@@ -236,4 +266,5 @@ a {
 .form_alert {
   color: red;
 }
+
 </style>

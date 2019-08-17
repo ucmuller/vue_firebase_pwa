@@ -2,13 +2,9 @@
     <div class="phone-viewport" v-if="userStatus">
       <md-bottom-bar class="md-primary bottom-bar" md-type="shift">
         <div class="bottom-bar-item">
-          <md-bottom-bar-item @click="routerPush('/')" id="bottom-bar-item-account">
-            <md-icon>account_circle</md-icon>
-            <span class="md-bottom-bar-label">プロフィール</span>
-          </md-bottom-bar-item>
           <md-bottom-bar-item @click="routerPush('/inviteform')" id="bottom-bar-item-invite" md-label="inviteForm">
             <md-icon>email</md-icon>
-            <span class="md-bottom-bar-label">招待作成</span>
+            <span class="md-bottom-bar-label">代理予約</span>
           </md-bottom-bar-item>
           <md-bottom-bar-item @click="routerPush({name:'InviteList',params:{id:user.staff_uid}})" id="bottom-bar-item-InviteList">
             <md-icon>playlist_add_check</md-icon>
@@ -24,6 +20,10 @@
             <md-icon>assignment</md-icon>
             <span class="md-bottom-bar-label">スタッフ招待</span>
             <!-- <i class="badge" v-if="reservationdataLength">{{ reservationdataLength }}</i> -->
+          </md-bottom-bar-item>
+          <md-bottom-bar-item @click="routerPush('/')" id="bottom-bar-item-account">
+            <md-icon>account_circle</md-icon>
+            <span class="md-bottom-bar-label">プロフィール</span>
           </md-bottom-bar-item>
         </div>
       </md-bottom-bar>

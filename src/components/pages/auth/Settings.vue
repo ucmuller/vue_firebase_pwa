@@ -50,6 +50,13 @@
         <button class="button-color" @click="logout">ログアウト</button>
       </div>
 
+      <div v-if="userStatus && (user.email == 'ucmuller@gmail.com' || user.email == 'str531@gmail.com')">
+        <div class="border-line">
+        <md-divider></md-divider>
+      </div>
+        <button  @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</button>
+      </div>
+
       
 
       <div class="loading-overlay" v-if="loading">
@@ -136,7 +143,9 @@ export default {
     logout() {
       Firebase.logout();
     },
-
+    routerPush(router){
+      this.$router.push(router)
+    },
     // sendMessage() {
     //   this.$v.$touch()
     //   if(!this.$v.$invalid){

@@ -14,6 +14,9 @@
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell>
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="!item.createdAt"></md-table-cell>
         <md-table-cell md-label="" md-sort-by="delete">
+          <md-button v-if="item.inviteFlag == true" @click="inviteCompletionByAdmin(item.inviteID, item)" class="md-raised">承認</md-button>
+        </md-table-cell>
+        <md-table-cell md-label="" md-sort-by="delete">
           <md-button @click="onModal(item.inviteID)" class="md-raised">削除</md-button>
         </md-table-cell>
       </md-table-row>
@@ -108,6 +111,10 @@ export default {
       console.log(this.ID)
       this.modal = false
       Firestore.deleteInviteDocument(this.ID)
+    },
+    inviteCompletionByAdmin(id, data){
+      Firestore.inviteCompletionByAdmin(id)
+      Firestore.saveReservationDataByAdmin(data)
     }
   }
 }

@@ -6,10 +6,10 @@
       <!-- <md-button v-if="userStatus" @click="test" class="logout-button">test</md-button>
       <md-button v-if="userStatus" @click="logout" class="logout-button">ログアウト</md-button> -->
     <div>
-      <!-- <button v-if="userStatus && (user.email == 'ucmuller@gmail.com' || user.email == 'str531@gmail.com')" @click="routerPush('/admintop/stafflist')" class="logout-button">Admin</button>
-      <button v-if="userStatus" @click="test" class="logout-button">info</button>
-      <button v-if="userStatus" @click="logout" class="logout-button">logout</button> -->
-      <button @click="routerPush('/settings')"><md-icon >settings</md-icon></button>
+      <!-- <button v-if="userStatus" @click="test" class="logout-button">info</button> -->
+      <!-- <button v-if="userStatus" @click="logout" class="logout-button">logout</button> -->
+      <button v-if="user" @click="routerPush('/settings')"><md-icon >settings</md-icon></button>
+      <md-button v-if="!user && !id" @click="routerPush('/signin')">ログインはこちら</md-button>
     </div>
     </md-toolbar>
   </div>
@@ -26,7 +26,7 @@ export default {
   data(){
     return {
       drawer: false,
-      id: '',
+      id: this.$route.params.id,
       photoURL: '',
       data:'',
       userdata: '',

@@ -59,4 +59,7 @@ export default {
 .md-steppers.md-horizontal.md-alternative .md-stepper-header {
     height: 50px;
 }
+a{
+  color: #0033cc;
+}
 </style>

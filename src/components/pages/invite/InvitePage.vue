@@ -165,8 +165,8 @@ export default {
         },
         {
           text: 'TEL',
-          value: this.$store.getters.inviteData.tel,
-          icon: 'phone_in_talk'
+          value: this.$store.getters.isSignedIn && this.$store.getters.inviteData.guestTelNumber ? this.$store.getters.inviteData.guestTelNumber : this.$store.getters.inviteData.tel,
+          icon: this.$store.getters.isSignedIn && this.$store.getters.inviteData.guestTelNumber ? 'phone_in_talk' : 'store'
         },
         // {
         //   text: 'LINEメッセージ',

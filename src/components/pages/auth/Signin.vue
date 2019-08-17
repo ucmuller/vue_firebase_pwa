@@ -103,7 +103,7 @@ export default {
         Firebase.login(this.email, this.password);
         setTimeout(() => {
           this.loading = false;
-        }, 3000);
+        }, 7000);
       }
     },
     logout() {

@@ -17,13 +17,14 @@ const settings = {};
 firestore.settings(settings);
 
 export default {
-    saveStaffData(uid,data,shopName){
+    saveStaffData(uid,currentUserData,data){
         firestore.collection("staff").doc(uid).set({
-            'staff_uid': data.uid,
-            'name': data.displayName,
-            'email': data.email,
-            'photoURL': data.photoURL,
-            'shopName': shopName,
+            'staff_uid': currentUserData.uid,
+            'name': currentUserData.displayName,
+            'email': currentUserData.email,
+            'photoURL': currentUserData.photoURL ? currentUserData.photoURL : '',
+            'shopName': data.shopName,
+            'shopTelNumber': data.shopTelNumber,
             'message': "ご来店お待ちしています。",
             'shopImageURL_1': "",
             'lineMessage': "仮予約で登録だけしておいたので、内容確認して問題なければ『予約確認』ボタン押して下さい。待ってるねー！",
@@ -92,6 +93,14 @@ export default {
             console.error("Error writing document: ", error);
         });
     },
+    changeReferralMessageOfStaffData(uid, referralMessage){
+        firestore.collection("staff").doc(uid).set({
+            'referralMessage': referralMessage,
+        }, { merge: true })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
 
     saveInviteData(user, data ,documentID){
         firestore.collection("invite").doc(documentID).set({
@@ -140,10 +149,31 @@ export default {
             'from_uid': data.from_uid,
             'guestName': data.guestName,
             'people': data.people,
-            'tel': telNumber,
+            'guestTelNumber': telNumber,
             'inviteId': inviteId,
             'reservationFlag': true,
             'shopImageURL_1': data.shopImageURL_1 ? data.shopImageURL_1 : "",
+            'staffName': data.staffName,
+            'shopName': data.shopName,
+            'createdAt': firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(function() {
+            // console.log("saveReservationData: Document written with ID");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+    saveReservationDataByAdmin(data){
+        firestore.collection("reservation").doc().set({
+            'time': data.time,
+            'date': data.date,
+            'from_uid': data.from_uid,
+            'guestName': data.guestName,
+            'people': data.people,
+            'tel': data.tel,
+            'inviteId': data.inviteID,
+            'reservationFlag': true,
             'staffName': data.staffName,
             'shopName': data.shopName,
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
@@ -260,7 +290,18 @@ export default {
     inviteCompletion(id, telNumber){
         firestore.collection("invite").doc(id).set({
             'inviteFlag': false,
-            'tel': telNumber
+            'guestTelNumber': telNumber
+        }, { merge: true })
+        .then(function() {
+            // console.log("saveInviteData: Document written with ID");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+    },
+    inviteCompletionByAdmin(id){
+        firestore.collection("invite").doc(id).set({
+            'inviteFlag': false,
         }, { merge: true })
         .then(function() {
             // console.log("saveInviteData: Document written with ID");

@@ -1,9 +1,12 @@
 <template>
   <div v-if="userStatus">
       <md-card class="md-card">
-        <md-avatar class="md-large">
+        <!-- <md-avatar v-if="photo" class="md-large">
           <img :src="photo" alt="">
         </md-avatar>
+        <md-avatar v-else-if="!photo" class="md-large">
+          <md-icon  class="">account_circle</md-icon>
+        </md-avatar> -->
         <div>
           <md-list class="md-double-line">
             <md-list-item>
@@ -16,10 +19,10 @@
               <span class="md-list-item-text">{{user.name}}</span>
             </md-list-item>
 
-            <md-list-item v-if="user.message">
+            <!-- <md-list-item v-if="user.message">
               <md-icon class="md-primary">comment</md-icon>
               <span class="md-list-item-text">{{user.message}}</span>
-            </md-list-item>
+            </md-list-item> -->
 
             <md-list-item>
               <md-icon class="md-primary">email</md-icon>
@@ -41,9 +44,12 @@
               <span class="md-list-item-text">確約数：{{reservationdataLength}}</span>
             </md-list-item>
           </md-list>
-          <md-card-actions>
+          <!-- <md-card-actions>
             <md-button class="md-raised md-primary" @click="routerPush('/userupdate')">表示名変更</md-button>
-          </md-card-actions>
+          </md-card-actions> -->
+          <div>
+            <md-button class="md-raised md-primary" @click="routerPush('/inviteform')">代理予約画面へ</md-button>
+          </div>
         </div>
     </md-card>
     </div>

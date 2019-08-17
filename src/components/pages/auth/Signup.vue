@@ -24,6 +24,15 @@
           </label>
           <md-input v-model="shopName"></md-input>
         </md-field>
+
+        <md-field>
+          <md-icon>phone_in_talk</md-icon>
+          <label v-if="$v.shopTelNumber.required">店舗電話番号(※必須)</label>
+          <label v-if="!$v.shopTelNumber.required">
+            <span>店舗電話番号(※必須)</span>
+          </label>
+          <md-input v-model="shopTelNumber"/>
+        </md-field>
         
         <md-field>
           <md-icon>email</md-icon>
@@ -50,17 +59,22 @@
           </label>
           
         </v-input>
-        <div>
+        <!-- <div>
           <p class="login-alert left" v-if="!$v.uploadFile.required" >写真が選択されていません。</p>
+        </div> -->
+        <div class="link-tag">
+          <md-checkbox class="left" v-model="pribacyBoolean" value="true"></md-checkbox>
+          <p><a href="https://rndv.jp/tos" target="_blank">利用規約</a>、<a href="https://rndv.jp/privacypolicy" target="_blank">プライバシーポリシー</a>に同意する</p>
         </div>
       </div>
       <br>
       <br>
       <br>
       <p class="login-alert center" v-if="loginState == 'The email address is already in use by another account.'" >このメールアドレスは登録されています。</p>
+      <p class="login-alert left" v-if="!$v.name.required">名前の入力は必須です</p>
 
       <div class="signup-button">
-        <md-button class="md-raised md-accent" @click="signup" :disabled="$v.$invalid">signup</md-button>
+        <md-button class="md-raised md-accent" @click="signup" :disabled="$v.$invalid">登録する</md-button>
       </div>
       
       <div>
@@ -70,7 +84,6 @@
       <div class="loading-overlay" v-if="loading">
         <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
       </div>
-
     </md-content>
 </div>
 </template>
@@ -78,7 +91,7 @@
 <script>
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
-import { required, minLength, email} from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, email } from 'vuelidate/lib/validators'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -87,13 +100,15 @@ export default {
     return {
       name: '',
       shopName: '',
+      shopTelNumber: '',
       email: '',
       password: '',
       uploadFile:'',
-      infoMsg:'＋写真を選択(※必須)',
+      infoMsg:'＋写真を選択(※任意)',
       loading: false,
       errorBool: false,
-      login: this.loginState
+      login: this.loginState,
+      pribacyBoolean: ''
     }
   },
   validations: {
@@ -105,6 +120,11 @@ export default {
       minLength: minLength(1),
       required,
     },
+    shopTelNumber: {
+      required,
+      minLength: minLength(10),
+      maxLength: maxLength(12),
+    },
     email: {
       required,
       minLength: minLength(5),
@@ -114,9 +134,12 @@ export default {
       required,
       minLength: minLength(6)
     },
-    uploadFile: {
+    pribacyBoolean: {
       required,
-    },
+    }
+    // uploadFile: {
+    //   required,
+    // },
   },
   computed: {
     ...mapGetters({
@@ -130,14 +153,15 @@ export default {
         'email': this.email,
         'password': this.password,
         'name': this.name,
-        'imageURL': this.uploadFile.name,
-        'uploadFile': this.uploadFile,
-        'shopName': this.shopName
+        'imageURL': this.uploadFile != '' ? this.uploadFile.name : '',
+        'uploadFile': this.uploadFile != '' ? this.uploadFile : '',
+        'shopName': this.shopName,
+        'shopTelNumber': this.shopTelNumber
       }
       Firebase.signup(userData)
       setTimeout(() => {
         this.loading = false;
-      }, 3000);
+      }, 7000);
 
     },
     selectFile: function (e) {
@@ -161,9 +185,7 @@ export default {
 
 
 <style scoped>
-a {
-  color: #42b983;
-}
+
 
 .photo-label {
   color: white;  
@@ -236,5 +258,18 @@ a {
 }
 .md-field.md-theme-default.md-focused > .md-icon {
     color: var(--md-theme-default-accent, #FB6359);
+}
+.link-tag{
+  font-size: 12px;
+  text-align: left;
+  display: flex;
+}
+.link-tag p{
+  margin: auto;
+  margin-left: 0;
+}
+
+.link-tag a{
+  color: #0033cc;
 }
 </style>

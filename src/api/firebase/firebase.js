@@ -25,7 +25,9 @@ export default {
       console.log('signup: success')
     })
     .then(()=>{
-      this.upload(data.uploadFile)
+      if(data.uploadFile){
+        this.upload(data.uploadFile)
+      }
       // router.push('/signin')
     })
     .then(()=>{
@@ -35,7 +37,7 @@ export default {
         (currentUser) => {
           let currentUserData = currentUser.user
           let currentUserID = currentUserData.uid
-          Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
+          Firestore.saveStaffData(currentUserID,currentUserData,data)
           console.log(currentUserData)
       })
       .then(()=>{
@@ -64,7 +66,9 @@ export default {
       console.log('signup: success')
     })
     .then(()=>{
-      this.upload(data.uploadFile)
+      if(data.uploadFile){
+        this.upload(data.uploadFile)
+      }
       // router.push('/signin')
     })
     .then(()=>{
@@ -74,7 +78,7 @@ export default {
         (currentUser) => {
           let currentUserData = currentUser.user
           let currentUserID = currentUserData.uid
-          Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
+          Firestore.saveStaffData(currentUserID,currentUserData,data)
           Firestore.saveReferralData(currentUserID, from_uid, currentUserData)
           // console.log(currentUserData)
       })
@@ -103,8 +107,10 @@ export default {
       console.log('signup: success')
     })
     .then(()=>{
-      this.upload(data.uploadFile)
-      // router.push('/signin')
+      if(data.uploadFile){
+        this.upload(data.uploadFile)
+      }
+        // router.push('/signin')
     })
     .then(()=>{
       console.log("uplaod後")
@@ -113,7 +119,7 @@ export default {
         (currentUser) => {
           let currentUserData = currentUser.user
           let currentUserID = currentUserData.uid
-          Firestore.saveStaffData(currentUserID,currentUserData,data.shopName)
+          Firestore.saveStaffData(currentUserID,currentUserData,data)
           Firestore.saveFromLPData(currentUserID, currentUserData)
           // console.log(currentUserData)
       })
@@ -135,22 +141,25 @@ export default {
 
   login(email,password){
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-    firebase.auth().signInWithEmailAndPassword(email,password)
-    .then(currentUser => {
-      Firestore.getStaffEachData(currentUser.user.uid)
-      Firestore.getInviteData(currentUser.user.uid)
-      Firestore.getReservationData(currentUser.user.uid)
-      store.dispatch('loginState', "")
-      router.push("/")
-    },
-    (err) => {
-      // alert("もう一度正しく入力してください。")
-      // router.push('/signin')
-      console.log("login", err)
-      store.dispatch('loginState', err.message)
-
-    })
+    .then( () => {
+      firebase.auth().signInWithEmailAndPassword(email,password)
+       .then(currentUser => {
+          Firestore.getStaffEachData(currentUser.user.uid)
+          Firestore.getInviteData(currentUser.user.uid)
+          Firestore.getReservationData(currentUser.user.uid)
+          store.dispatch('loginState', "")
+          if(currentUser){
+            setTimeout(() => {
+              router.push('/inviteform')
+            },5000)
+          }
+        },
+        (err) => {
+          // alert("もう一度正しく入力してください。")
+          // router.push('/signin')
+          console.log("login", err)
+          store.dispatch('loginState', err.message)
+        })
     // return firebase.auth().signInWithEmailAndPassword(email, password);
     })
     .catch(function(error) {
@@ -175,7 +184,7 @@ export default {
   onAuth(){
     firebase.auth().onAuthStateChanged(user => {
     let userData = user ? user : {};
-    console.log(userData.uid)
+    // console.log(userData.uid)
     if(userData.uid){
       Firestore.getStaffEachData(userData.uid)
       this.getImageURL(user.photoURL)
@@ -189,7 +198,7 @@ export default {
     let uid = firebase.auth().currentUser.uid;
     // console.log('upload: success', firebase.auth().currentUser.uid)
     firebase.storage().ref().child('user/'+ uid + uploadFile.name).put(uploadFile).then(function (snapshot) {
-    console.log('Uploaded a file!',snapshot);
+    // console.log('Uploaded a file!',snapshot);
     });
   },
 
@@ -199,7 +208,7 @@ export default {
     // console.log('upload: success', firebase.auth().currentUser.uid)
     firebase.storage().ref().child('shop/'+ uid + uploadFile.name).put(uploadFile)
     .then(function (snapshot) {
-    console.log('Uploaded a file!',snapshot);
+    // console.log('Uploaded a file!',snapshot);
     });
   },
 
@@ -222,7 +231,7 @@ export default {
   addUserDate(data){
     firebase.auth().currentUser.updateProfile({
       displayName: data.name,
-      photoURL: firebase.auth().currentUser.uid + data.imageURL
+      photoURL: data.imageURL != '' ? firebase.auth().currentUser.uid + data.imageURL : ''
     })
   },
 
