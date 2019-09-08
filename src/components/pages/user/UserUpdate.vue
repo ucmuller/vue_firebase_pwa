@@ -21,16 +21,28 @@
             </md-field>
             <md-field>
               <div>
+                <label>店舗住所</label>
+                <md-input v-model="datas.shopAddress"></md-input>
+              </div>
+            </md-field>
+            <md-field>
+              <div>
+                <label>店舗URL</label>
+                <md-input v-model="datas.shopInfo"></md-input>
+              </div>
+            </md-field>
+            <md-field>
+              <div>
                 <label>ひとこと</label>
                 <md-input v-model="datas.message"></md-input>
               </div>
             </md-field>
-            <v-input prepend-icon="image">
+            <!-- <v-input prepend-icon="image">
               <label class="photo-label" for="file_photo">
                 <input id="file_photo" @change="selectFile" type="file" name="file" style="display:none;" value="">
                 <div id="errArea"> {{ infoMsg }}</div>
               </label>
-            </v-input>
+            </v-input> -->
           </md-card-header>
           <md-button class="md-raised md-accent" @click="changeStaffProfile">変更</md-button>
           <md-button class="md-raised md-primary" @click="routerPush('/')">キャンセル</md-button>
@@ -48,6 +60,7 @@
 <script>
 // import { mapActions, mapGetters } from 'vuex'
 import Firebase from '@/api/firebase/firebase'
+import Firestore from '@/api/firebase/firestore'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -60,6 +73,9 @@ export default {
         message: this.$store.getters.user.message,
         shopImageURL_1: this.$store.getters.user.shopImageURL_1,
         shopImageName_1: this.$store.getters.user.shopImageURL_1,
+        shopInfo: this.$store.getters.user.shopInfo ? this.$store.getters.user.shopInfo : '',
+        shopAddress: this.$store.getters.user.shopAddress ? this.$store.getters.user.shopAddress : ''
+
       },
       email:'',
       password:'',
@@ -72,6 +88,7 @@ export default {
 
   created: function(){
     Firebase.onAuth()
+    Firestore.getStaffEachData(this.user.staff_uid)
     this.getShopImageURL()
   },
 
@@ -90,11 +107,11 @@ export default {
     user() {
       console.log("ユーザーデータ更新");
     },
-    shopImageURL() {
-      this.datas.shopImageURL_1 = this.$store.getters.shopImageURL
-      this.getShopImageURL()
-      console.log("shopImage更新");
-    },
+    // shopImageURL() {
+    //   this.datas.shopImageURL_1 = this.$store.getters.shopImageURL
+    //   this.getShopImageURL()
+    //   console.log("shopImage更新");
+    // },
 
   },
 

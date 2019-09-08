@@ -6,6 +6,7 @@ import {store} from '@/store/'
 import router from '@/router'
 import types from '@/store/mutation-types';
 import Firestore from '@/api/firebase/firestore'
+import {checkRevision} from '@/revision_check'
 
 export default {
   init(){
@@ -184,13 +185,21 @@ export default {
   onAuth(){
     firebase.auth().onAuthStateChanged(user => {
     let userData = user ? user : {};
+    checkRevision()
+      .then( result => {
+        if(userData.uid){
+          Firestore.getStaffEachData(userData.uid)
+          this.getImageURL(user.photoURL)
+          // console.log('onAuth',userData)
+        }else{
+          router.push('/signin')
+        }
+      },
+      err => {
+        console.log("リビジョン確認失敗")
+      })
     // console.log(userData.uid)
-    if(userData.uid){
-      Firestore.getStaffEachData(userData.uid)
-      this.getImageURL(user.photoURL)
-    }else{
-      router.push('/signin')
-    }
+
     });
   },
 
@@ -258,17 +267,23 @@ export default {
   },
 
   signInAnonymously(){
-    firebase.auth().signInAnonymously()
-    .catch( (error) => {
-      console.log("signInAnonymously",error);
-    });
-
-    firebase.auth().onAuthStateChanged( (user) => {
-      if ( user ) {
-        let uid = user.uid;
-        console.log("signInAnonymously",uid);
-      }
-    });
+    checkRevision()
+    .then( result => {
+      firebase.auth().signInAnonymously()
+      .catch( (error) => {
+        console.log("signInAnonymously",error);
+      });
+  
+      firebase.auth().onAuthStateChanged( (user) => {
+        if ( user ) {
+          let uid = user.uid;
+          console.log("signInAnonymously",uid);
+        }
+      });
+    },
+    err => {
+      console.log("リビジョン確認失敗")
+    })
   },
 
 

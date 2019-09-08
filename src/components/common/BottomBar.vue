@@ -84,7 +84,7 @@ export default {
     width: 100%;
     z-index: 2;
     justify-content: center;
-    max-width: 769px;
+    /* max-width: 769px; */
   }
   .bottom-bar-item{
     display: flex;

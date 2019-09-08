@@ -26,6 +26,7 @@
     <link rel="apple-touch-startup-image" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/RNDV_logo.png" media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/RNDV_logo.png" media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)">
     <!-- Add to home screen for Windows -->
+    
     <meta name="msapplication-TileImage" content="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/RNDV_logo.png">
     <meta name="msapplication-TileColor" content="#FB6359">
     <% for (var chunk of webpack.chunks) {
@@ -34,10 +35,15 @@
     <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
     <style>
       .body_cs {
-          max-width: 769px;
+          /* max-width: 769px; */
           margin: auto;
       }
   </style>
+  <!-- リビジョン管理用JSON変数埋め込み -->
+  <script type="text/javascript">
+    var g_revision="0"; // リビジョンNO管理 ※必ず"0"を指定
+  </script>
+  <!-- /リビジョン管理用JSON変数埋め込み -->
   </head>
   <body class="body_cs" style="background-color:#fff;">
     <noscript>

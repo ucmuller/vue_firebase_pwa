@@ -11,7 +11,7 @@
           </strong>
         </h2>
         <h2>のご協力をお願いします。</h2>
-        <h3 class="form_alert">今なら、ご紹介者がRNDV[ランデブ]の<br>利用開始で500円キャッシュバック！！</h3>
+        <!-- <h3 class="form_alert">今なら、ご紹介者がRNDV[ランデブ]の<br>利用開始で500円キャッシュバック！！</h3> -->
       </div>
       <h3>↓LINEのトーク画面に反映されます↓</h3>
       <md-field>
@@ -86,7 +86,8 @@ export default {
       id: this.$route.params.id,
       loading: false,
       referralMessage: this.$store.getters.user.referralMessage ? this.$store.getters.user.referralMessage : '「接客力をキャッシュに変えるRNDV[ランデブ]」という、飲食店で働く人用のサービスの紹介です。',
-      referralURL: 'https://rndv.jp/referralpage/' + this.$route.params.id,
+      // referralURL: 'https://rndv.jp/referralpage/' + this.$route.params.id,
+      referralURL: 'https://reserve-beta.firebaseapp.com/signup?openExternalBrowser=1',
       modal: false
     }
   },

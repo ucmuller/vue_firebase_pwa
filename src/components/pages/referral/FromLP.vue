@@ -33,6 +33,20 @@
           </label>
           <md-input v-model="shopTelNumber"/>
         </md-field>
+
+        <md-field>
+          <md-icon>stars</md-icon>
+          <label v-if="$v.employmentStatus.required">役職(※必須)</label>
+          <label v-if="!$v.employmentStatus.required">
+            <span>役職(※必須)</span>
+          </label>
+          <md-select v-model="employmentStatus">
+            <md-option value="オーナー">・オーナー</md-option>
+            <md-option value="正社員">・正社員</md-option>
+            <md-option value="アルバイト">・アルバイト</md-option>
+            <md-option value="その他">・その他</md-option>
+          </md-select>
+        </md-field>
         
         <md-field>
           <md-icon>email</md-icon>
@@ -64,7 +78,7 @@
         </div> -->
         <div class="link-tag">
           <md-checkbox class="left" v-model="pribacyBoolean" value="true"></md-checkbox>
-          <p><a href="https://rndv.jp/tos" target="_blank">利用規約</a>、<a href="https://rndv.jp/privacypolicy" target="_blank">プライバシーポリシー</a>に同意する</p>
+          <p><a class="md-accent" href="https://rndv.jp/tos" target="_blank">利用規約</a>、<a class="md-accent" href="https://rndv.jp/privacypolicy" target="_blank">プライバシーポリシー</a>に同意する</p>
         </div>
       </div>
       <br>
@@ -110,7 +124,8 @@ export default {
       from_uid: this.$route.params.id,
       errorBool: false,
       login: this.loginState,
-      pribacyBoolean: ''
+      pribacyBoolean: '',
+      employmentStatus: ''
     }
   },
   validations: {
@@ -138,7 +153,10 @@ export default {
     },
     pribacyBoolean: {
       required,
-    }
+    },
+    employmentStatus: {
+      required,
+    },
     // uploadFile: {
     //   required,
     // },
@@ -158,7 +176,8 @@ export default {
         'imageURL': this.uploadFile != '' ? this.uploadFile.name : '',
         'uploadFile': this.uploadFile != '' ? this.uploadFile : '',
         'shopName': this.shopName,
-        'shopTelNumber': this.shopTelNumber
+        'shopTelNumber': this.shopTelNumber,
+        'employmentStatus': this.employmentStatus
       }
       Firebase.signupFromLP(userData)
       setTimeout(() => {

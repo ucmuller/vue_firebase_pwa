@@ -33,6 +33,20 @@
           </label>
           <md-input v-model="shopTelNumber"/>
         </md-field>
+
+        <md-field>
+          <md-icon>stars</md-icon>
+          <label v-if="$v.employmentStatus.required">役職(※必須)</label>
+          <label v-if="!$v.employmentStatus.required">
+            <span>役職(※必須)</span>
+          </label>
+          <md-select v-model="employmentStatus">
+            <md-option value="オーナー">・オーナー</md-option>
+            <md-option value="正社員">・正社員</md-option>
+            <md-option value="アルバイト">・アルバイト</md-option>
+            <md-option value="その他">・その他</md-option>
+          </md-select>
+        </md-field>
         
         <md-field>
           <md-icon>email</md-icon>
@@ -64,14 +78,14 @@
         </div> -->
         <div class="link-tag">
           <md-checkbox class="left" v-model="pribacyBoolean" value="true"></md-checkbox>
-          <p><a href="https://rndv.jp/tos" target="_blank">利用規約</a>、<a href="https://rndv.jp/privacypolicy" target="_blank">プライバシーポリシー</a>に同意する</p>
+          <p><a class="md-accent" href="https://rndv.jp/tos" target="_blank">利用規約</a>、<a class="md-accent" href="https://rndv.jp/privacypolicy" target="_blank">プライバシーポリシー</a>に同意する</p>
         </div>
       </div>
       <br>
       <br>
       <br>
       <p class="login-alert center" v-if="loginState == 'The email address is already in use by another account.'" >このメールアドレスは登録されています。</p>
-      <p class="login-alert left" v-if="!$v.name.required">名前の入力は必須です</p>
+      <!-- <p class="login-alert left" v-if="!$v.name.required">名前の入力は必須です</p> -->
 
       <div class="signup-button">
         <md-button class="md-raised md-accent" @click="signup" :disabled="$v.$invalid">登録する</md-button>
@@ -108,7 +122,8 @@ export default {
       loading: false,
       errorBool: false,
       login: this.loginState,
-      pribacyBoolean: ''
+      pribacyBoolean: '',
+      employmentStatus: ''
     }
   },
   validations: {
@@ -134,6 +149,9 @@ export default {
       required,
       minLength: minLength(6)
     },
+    employmentStatus: {
+      required,
+    },
     pribacyBoolean: {
       required,
     }
@@ -156,7 +174,8 @@ export default {
         'imageURL': this.uploadFile != '' ? this.uploadFile.name : '',
         'uploadFile': this.uploadFile != '' ? this.uploadFile : '',
         'shopName': this.shopName,
-        'shopTelNumber': this.shopTelNumber
+        'shopTelNumber': this.shopTelNumber,
+        'employmentStatus': this.employmentStatus
       }
       Firebase.signup(userData)
       setTimeout(() => {
@@ -272,4 +291,10 @@ export default {
 .link-tag a{
   color: #0033cc;
 }
+
+.md-has-value .md-input, .md-field.md-theme-default.md-has-value .md-textarea {
+  margin-left: 12px;
+}
+
+
 </style>

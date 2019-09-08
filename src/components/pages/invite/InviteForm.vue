@@ -15,17 +15,22 @@
         <div class="card-reservation">
           <div class="md-layout-item">
           <md-field class="md-field">
+            <md-icon>store</md-icon>
             <label>店名</label>
             <md-input v-model="user.shopName"></md-input>
           </md-field>
-          <md-field>
+          <!-- <md-field>
             <label>日付</label>
             <md-select v-model="data.date" id="date" required>
               <md-option :value="today">本日:{{today}}</md-option>
               <md-option :value="tomorrow">明日:{{tomorrow}}</md-option>
             </md-select>
-          </md-field>
+          </md-field> -->
+          <md-datepicker v-model="inputDate" md-immediately required>
+            <label>日付*</label>
+          </md-datepicker>
           <md-field>
+            <md-icon>schedule</md-icon>
             <label>時間</label>
             <md-select v-model="data.time" id="time" required>
               <md-option 
@@ -110,7 +115,8 @@ export default {
         ],
       peoples: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],
       peoplesString: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25名以上"],
-      documentID: ''
+      documentID: '',
+      inputDate: ''
     }
   },
   created: function(){
@@ -149,12 +155,58 @@ export default {
       } else {
         return true
       }
-    },
-    test() {
-          // console.log(this.$store.getters.user)
     }
   },
   watch: {
+    inputDate: {
+      handler: function(){
+        let month, day, date
+        let inputDate = String(this.inputDate).split(' ')
+        day = String(Number(inputDate[2]))
+        switch (inputDate[1]){
+          case "Jan":
+            month = "1"
+            break;
+          case "Feb":
+            month = "2"
+            break;
+          case "Mar":
+            month = "3"
+            break;
+          case "Apr":
+            month = "4"
+            break;
+          case "May":
+            month = "5"
+            break;
+          case "Jun":
+            month = "6"
+            break;
+          case "Jul":
+            month = "7"
+            break;
+          case "Aug":
+            month = "8"
+            break;
+          case "Sep":
+            month = "9"
+            break;
+          case "Oct":
+            month = "10"
+            break;
+          case "Nov":
+            month = "11"
+            break;
+          case "Dec":
+            month = "12"
+            break;
+        }
+        date = `${month}/${day}`
+        this.data.date = date
+      },
+      deep: true
+    },
+
     // shopImageURL() {
     //   this.data.shopImageURL_1 = this.$store.getters.shopImageURL
     //   this.getShopImageURL()
@@ -191,6 +243,9 @@ export default {
     getReservationData(){
       Firestore.getReservationData(this.user.staff_uid)
     },
+    test() {
+      console.log(this.data.date)
+    }
   }
 }
 </script>

@@ -2,7 +2,7 @@
 <div class="page-container">
   <div class="md-layout-column">
     <md-toolbar class="toolbar">
-      <img src="@/assets/img/logo.png" alt="" width="20%">
+      <img src="@/assets/img/logo.png" alt="" width="15%">
       <!-- <md-button v-if="userStatus" @click="test" class="logout-button">test</md-button>
       <md-button v-if="userStatus" @click="logout" class="logout-button">ログアウト</md-button> -->
     <div>
@@ -73,7 +73,7 @@ export default {
 .toolbar{
   display: flex;
   justify-content: space-between;
-  max-width: 769px;
+  /* max-width: 769px; */
 }
 
 

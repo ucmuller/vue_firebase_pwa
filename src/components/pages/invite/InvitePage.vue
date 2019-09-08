@@ -5,13 +5,15 @@
 <div>
   <md-card class="md-card" v-if="dataStatus">
     <md-card-area md-inset>
-      <md-card-media md-ratio="16:9">
+      <!-- <md-card-media md-ratio="16:9">
         <img v-if="!inviteData.shopImageURL_1" src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" alt="Coffee House">
         <img v-if="inviteData.shopImageURL_1" :src="inviteData.shopImageURL_1" alt="Coffee House">
-      </md-card-media>
+      </md-card-media> -->
 
       <md-card-header>
         <h2 class="md-title">{{inviteData.shopName}}</h2>
+        <h4 v-if="inviteData.shopAddress" class="md-subhead">住所：{{inviteData.shopAddress}}</h4>
+        <a v-if="inviteData.shopInfo" v-bind:href="inviteData.shopInfo" class="md-accent">店舗情報はこちら</a>
         <div class="md-subhead">
           <!-- <md-icon>location_on</md-icon>
           <span>2 miles</span> -->

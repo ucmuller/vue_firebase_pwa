@@ -25,6 +25,7 @@ export default {
             'photoURL': currentUserData.photoURL ? currentUserData.photoURL : '',
             'shopName': data.shopName,
             'shopTelNumber': data.shopTelNumber,
+            'employmentStatus': data.employmentStatus,
             'message': "ご来店お待ちしています。",
             'shopImageURL_1': "",
             'lineMessage': "仮予約で登録だけしておいたので、内容確認して問題なければ『予約確認』ボタン押して下さい。待ってるねー！",
@@ -57,6 +58,8 @@ export default {
                 'name': data.name,
                 'shopName': data.shopName,
                 'message': data.message,
+                'shopInfo': data.shopInfo,
+                'shopAddress': data.shopAddress,
                 'shopImageURL_1': data.shopImageURL_1.name ? firebase.auth().currentUser.uid + data.shopImageURL_1.name : data.shopImageName_1,
             }, { merge: true })
             .then(function() {
@@ -71,6 +74,8 @@ export default {
                 'name': data.name,
                 'shopName': data.shopName,
                 'message': data.message,
+                'shopInfo': data.shopInfo,
+                'shopAddress': data.shopAddress
             }, { merge: true })
             .then(function() {
                 console.log("changeStaffData: success",data.shopImageURL_1);
@@ -112,6 +117,8 @@ export default {
             'tel': data.tel ? data.tel : '',
             'shopName': user.shopName,
             'shopImageURL_1': data.shopImageURL_1,
+            'shopInfo': user.shopInfo,
+            'shopAddress': user.shopAddress,
             'staffName': user.name,
             'inviteFlag': true,
             'message': user.message,
@@ -119,7 +126,7 @@ export default {
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
-            // console.log("saveInviteData: Document written with ID");
+        
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);
@@ -368,7 +375,7 @@ export default {
             querySnapshot.forEach(function(doc) {
                 allStaffDataArray.push(doc.data());
             });
-            console.log(allStaffDataArray)
+            // console.log(allStaffDataArray)
             allStaffDataArray.sort(function(a,b){
                 if(a.createdAt < b.createdAt) return 1;
                 if(a.createdAt > b.createdAt) return -1;
@@ -384,7 +391,7 @@ export default {
             querySnapshot.forEach(function(doc) {
                 allInviteDataArray.push(doc.data());
             });
-            console.log(allInviteDataArray)
+            // console.log(allInviteDataArray)
             allInviteDataArray.sort(function(a,b){
                 if(a.createdAt < b.createdAt) return 1;
                 if(a.createdAt > b.createdAt) return -1;

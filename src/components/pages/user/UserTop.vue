@@ -44,12 +44,12 @@
               <span class="md-list-item-text">確約数：{{reservationdataLength}}</span>
             </md-list-item>
           </md-list>
-          <!-- <md-card-actions>
+          <md-card-actions>
             <md-button class="md-raised md-primary" @click="routerPush('/userupdate')">表示名変更</md-button>
-          </md-card-actions> -->
-          <div>
+          </md-card-actions>
+          <!-- <div>
             <md-button class="md-raised md-primary" @click="routerPush('/inviteform')">代理予約画面へ</md-button>
-          </div>
+          </div> -->
         </div>
     </md-card>
     </div>
@@ -66,6 +66,7 @@ import { mapGetters } from 'vuex'
 import router from 'vue-router'
 import Vuelidate from 'vuelidate'
 
+
 export default {
   name: 'UserTop',
   data(){
@@ -81,9 +82,11 @@ export default {
   },
 
   created: function(){
+
     Firebase.onAuth()
     this.getInviteData()
     this.getReservationData()
+
     // console.log(Vuelidate)
   },
 
