@@ -41,7 +41,9 @@
             <span>役職(※必須)</span>
           </label>
           <md-select v-model="employmentStatus">
-            <md-option value="オーナー">・オーナー</md-option>
+            <md-option value="オーナー店長">・オーナー 兼 店長</md-option>
+            <md-option value="オーナー">・オーナー(※店長は別にいる)</md-option>
+            <md-option value="店長">・店長(※オーナーは別にいる)</md-option>
             <md-option value="正社員">・正社員</md-option>
             <md-option value="アルバイト">・アルバイト</md-option>
             <md-option value="その他">・その他</md-option>

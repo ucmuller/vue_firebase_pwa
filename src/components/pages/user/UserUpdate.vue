@@ -2,34 +2,73 @@
   <div v-if="userStatus">
       <md-card class="md-card">
         <md-card-area md-inset>
-          <md-card-media v-if="shopImageURL" md-ratio="16:9">
+          <!-- <md-card-media v-if="shopImageURL" md-ratio="16:9">
             <img :src="shopImageURL" alt="Coffee House">
-          </md-card-media>
+          </md-card-media> -->
         </md-card-area>
           <md-card-header>
             <md-field>
               <div>
                 <label>店舗名</label>
-                <md-input v-model="datas.shopName"></md-input>
+                <md-input v-model="datas.shopName" disabled></md-input>
               </div>
             </md-field>
             <md-field>
               <div>
-                <label>名前</label>
+                <label>店舗電話番号</label>
+                <md-input v-if="datas.shopTelNumber" v-model="datas.shopTelNumber" disabled></md-input>
+              </div>
+            </md-field>
+            <md-field>
+              <div class="full-width">
+                <label>店舗住所</label>
+                <md-textarea v-model="datas.shopAddress" md-autogrow></md-textarea>
+              </div>
+            </md-field>
+            <md-field>
+              <div class="full-width">
+                <label>店舗URL</label>
+                <md-textarea v-model="datas.shopInfo" md-autogrow></md-textarea>
+              </div>
+            </md-field>
+            <md-field>
+              <div>
+                <label>名前:漢字フルネーム(※在籍確認に必要です)</label>
+                <md-input v-if="datas.fullname" v-model="datas.fullname"></md-input>
+                <md-input v-if="!datas.fullname" v-model="datas.fullname"></md-input>
+              </div>
+            </md-field>
+            <md-field>
+              <div>
+                <label>名前:フリガナ(※振込時に必要です)</label>
+                <md-input v-if="datas.furigana" v-model="datas.furigana"></md-input>
+                <md-input v-if="!datas.furigana" v-model="datas.furigana"></md-input>
+              </div>
+            </md-field>
+            <md-field>
+              <div>
+                <label>ニックネーム(招待者に表示される名前です)</label>
                 <md-input v-model="datas.name"></md-input>
               </div>
             </md-field>
             <md-field>
               <div>
-                <label>店舗住所</label>
-                <md-input v-model="datas.shopAddress"></md-input>
+                <label>email</label>
+                <md-input v-model="datas.email" disabled></md-input>
               </div>
             </md-field>
             <md-field>
-              <div>
-                <label>店舗URL</label>
-                <md-input v-model="datas.shopInfo"></md-input>
-              </div>
+              <div class="full-width">
+                <label>役職</label>
+                <md-select v-model="datas.employmentStatus">
+                  <md-option value="オーナー店長">オーナー 兼 店長</md-option>
+                  <md-option value="オーナー">オーナー(※店長は別にいる)</md-option>
+                  <md-option value="店長">店長(※オーナーは別にいる)</md-option>
+                  <md-option value="正社員">正社員</md-option>
+                  <md-option value="アルバイト">アルバイト</md-option>
+                  <md-option value="その他">その他</md-option>
+                </md-select>
+               </div>
             </md-field>
             <md-field>
               <div>
@@ -70,11 +109,16 @@ export default {
       datas: {
         shopName: this.$store.getters.user.shopName,
         name: this.$store.getters.user.name,
+        fullname: this.$store.getters.user.fullname ? this.$store.getters.user.fullname : '',
+        furigana: this.$store.getters.user.furigana ? this.$store.getters.user.furigana : '',
         message: this.$store.getters.user.message,
+        email: this.$store.getters.user.email,
         shopImageURL_1: this.$store.getters.user.shopImageURL_1,
         shopImageName_1: this.$store.getters.user.shopImageURL_1,
         shopInfo: this.$store.getters.user.shopInfo ? this.$store.getters.user.shopInfo : '',
-        shopAddress: this.$store.getters.user.shopAddress ? this.$store.getters.user.shopAddress : ''
+        shopAddress: this.$store.getters.user.shopAddress ? this.$store.getters.user.shopAddress : '',
+        shopTelNumber: this.$store.getters.user.shopTelNumber ? this.$store.getters.user.shopTelNumber : '',
+        employmentStatus: this.$store.getters.user.employmentStatus ? this.$store.getters.user.employmentStatus : ''
 
       },
       email:'',
@@ -89,7 +133,7 @@ export default {
   created: function(){
     Firebase.onAuth()
     Firestore.getStaffEachData(this.user.staff_uid)
-    this.getShopImageURL()
+    // this.getShopImageURL()
   },
 
   computed: {
@@ -188,5 +232,13 @@ input{
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.md-textarea{
+  width: 100%;
+}
+
+.full-width{
+  width: 100%;
 }
 </style>

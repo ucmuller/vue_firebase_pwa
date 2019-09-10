@@ -56,10 +56,15 @@ export default {
         if(data.shopImageURL_1){
             firestore.collection("staff").doc(uid).set({
                 'name': data.name,
+                'fullname': data.fullname,
+                'furigana': data.furigana,
+                'email': data.email,
                 'shopName': data.shopName,
+                'shopTelNumber': data.shopTelNumber,
                 'message': data.message,
                 'shopInfo': data.shopInfo,
                 'shopAddress': data.shopAddress,
+                'employmentStatus': data.employmentStatus,
                 'shopImageURL_1': data.shopImageURL_1.name ? firebase.auth().currentUser.uid + data.shopImageURL_1.name : data.shopImageName_1,
             }, { merge: true })
             .then(function() {
@@ -72,10 +77,16 @@ export default {
         }else{
             firestore.collection("staff").doc(uid).set({
                 'name': data.name,
+                'fullname': data.fullname,
+                'furigana': data.furigana,
+                'email': data.email,
                 'shopName': data.shopName,
+                'shopTelNumber': data.shopTelNumber,
                 'message': data.message,
                 'shopInfo': data.shopInfo,
-                'shopAddress': data.shopAddress
+                'shopAddress': data.shopAddress,
+                'employmentStatus': data.employmentStatus,
+
             }, { merge: true })
             .then(function() {
                 console.log("changeStaffData: success",data.shopImageURL_1);
@@ -117,8 +128,8 @@ export default {
             'tel': data.tel ? data.tel : '',
             'shopName': user.shopName,
             'shopImageURL_1': data.shopImageURL_1,
-            'shopInfo': user.shopInfo,
-            'shopAddress': user.shopAddress,
+            'shopInfo': user.shopInfo ? user.shopInfo : '',
+            'shopAddress': user.shopAddress ? user.shopAddress : '',
             'staffName': user.name,
             'inviteFlag': true,
             'message': user.message,

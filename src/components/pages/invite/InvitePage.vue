@@ -12,11 +12,14 @@
 
       <md-card-header>
         <h2 class="md-title">{{inviteData.shopName}}</h2>
-        <h4 v-if="inviteData.shopAddress" class="md-subhead">住所：{{inviteData.shopAddress}}</h4>
-        <a v-if="inviteData.shopInfo" v-bind:href="inviteData.shopInfo" class="md-accent">店舗情報はこちら</a>
-        <div class="md-subhead">
-          <!-- <md-icon>location_on</md-icon>
-          <span>2 miles</span> -->
+        <!-- <h4 v-if="inviteData.shopAddress" class="md-subhead">住所：{{inviteData.shopAddress}}</h4> -->
+        <div class="margin-top">
+          <md-icon>info</md-icon>
+          <span><a v-if="inviteData.shopInfo" v-bind:href="inviteData.shopInfo" class="md-accent">店舗情報はこちら</a></span>
+        </div>
+        <div class="margin-top">
+          <md-icon>location_on</md-icon>
+          <span><a v-if="inviteData.shopAddress" v-bind:href="mapURL" class="md-accent margin-top">Google Mapで場所を確認</a></span>
         </div>
       </md-card-header>
 
@@ -110,7 +113,9 @@ export default {
       inviteFlag: true,
       loading: false,
       modal: false,
-      telNumber: ''
+      telNumber: '',
+      mapURL: this.$store.getters.inviteData.shopAddress ? 'https://maps.google.co.jp/maps?q=' + this.$store.getters.inviteData.shopAddress : ''
+
     }
   },
 
@@ -332,6 +337,11 @@ a {
 
 button.md-button.md-theme-default.md-primary {
   color: #FB6359;
+}
+
+.margin-top{
+  margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 </style>

@@ -8,10 +8,30 @@
           <md-icon  class="">account_circle</md-icon>
         </md-avatar> -->
         <div>
-          <md-list class="md-double-line">
+          <md-list class="">
             <md-list-item>
               <md-icon class="md-primary">store_mall_directory</md-icon>
               <span class="md-list-item-text">{{user.shopName}}</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon class="md-primary">my_location</md-icon>
+              <div class="full-width">
+                <span v-if="user.shopAddress" class="md-list-item-text"><a class="md-accent" v-bind:href="mapURL">Google Mapで住所を確認</a></span>
+                <span v-if="!user.shopAddress" class="md-list-item-text">店舗住所：未入力</span>
+              </div>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon class="md-primary">link</md-icon>
+              <span v-if="user.shopInfo" class="md-list-item-text"><a class="md-accent" v-bind:href="user.shopInfo">店舗URLリンクを確認</a></span>
+              <span v-if="!user.shopInfo" class="md-list-item-text">店舗URL：未入力</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon class="md-primary">call</md-icon>
+              <span v-if="user.shopTelNumber" class="md-list-item-text">{{user.shopTelNumber}}</span>
+              <span v-if="!user.shopTelNumber" class="md-list-item-text">店舗電話番号：未入力</span>
             </md-list-item>
 
             <md-list-item>
@@ -27,6 +47,12 @@
             <md-list-item>
               <md-icon class="md-primary">email</md-icon>
               <span class="md-list-item-text">{{user.email}}</span>
+            </md-list-item>
+
+            <md-list-item>
+              <md-icon class="md-primary">stars</md-icon>
+              <span v-if="user.employmentStatus" class="md-list-item-text">{{user.employmentStatus}}</span>
+              <span v-if="!user.employmentStatus" class="md-list-item-text">役職：未入力</span>
             </md-list-item>
 
             <md-list-item v-if="inviteAllDataLength">
@@ -45,7 +71,7 @@
             </md-list-item>
           </md-list>
           <md-card-actions>
-            <md-button class="md-raised md-primary" @click="routerPush('/userupdate')">表示名変更</md-button>
+            <md-button class="md-raised md-primary" @click="routerPush('/userupdate')">変更</md-button>
           </md-card-actions>
           <!-- <div>
             <md-button class="md-raised md-primary" @click="routerPush('/inviteform')">代理予約画面へ</md-button>
@@ -77,7 +103,8 @@ export default {
       password:'',
       photoURL:'',
       updateStatus: false,
-      userData: ''
+      userData: '',
+      mapURL: this.$store.getters.user.shopAddress ? 'https://maps.google.co.jp/maps?q=' + this.$store.getters.user.shopAddress : ''
     }
   },
 
@@ -138,30 +165,48 @@ export default {
 
 <style scoped>
 
-  .md-card {
-    width: 90%;
-    margin-top: 70px;
-    display: inline-block;
-    vertical-align: top;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 80px;
-  }
-  .message{
-    width: 90%;
-    margin-top: 70px;
-    display: inline-block;
-    vertical-align: top;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 80px;
-  }
+.md-card {
+  width: 90%;
+  margin-top: 70px;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 80px;
+}
+.message{
+  width: 90%;
+  margin-top: 70px;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 80px;
+}
 
-  .md-button.md-theme-default.md-raised:not([disabled]).md-accent {
-    color: white;
+.md-button.md-theme-default.md-raised:not([disabled]).md-accent {
+  color: white;
+}
+
+.full-width{
+  width: 100%;
+  word-wrap: break-word;
+}
+
+h5{
+  width: 100px;
+}
+
+a{
+  width: 100%;
+}
+
+.md-list-item-text{
+  width: 100%;
+  word-wrap: break-word;
 }
 </style>
