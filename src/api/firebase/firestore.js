@@ -443,6 +443,7 @@ export default {
                         'guestName': doc.data().guestName,
                         'people': doc.data().people,
                         'tel': doc.data().tel,
+                        'guestTelNumber': doc.data().guestTelNumber,
                         'inviteFlag': doc.data().inviteFlag,
                         'staffName': doc.data().staffName,
                         'createdAt': doc.data().createdAt,
