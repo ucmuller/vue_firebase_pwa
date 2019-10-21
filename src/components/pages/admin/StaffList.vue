@@ -13,7 +13,7 @@
       <md-table-row slot="md-table-row" slot-scope="{ item }">
         <md-table-cell md-label="店名" md-sort-by="shop">{{ item.shopName }}</md-table-cell>
         <md-table-cell md-label="名前" md-sort-by="name">{{ item.name }}</md-table-cell>
-        <!-- <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell> -->
+        <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
         <md-table-cell md-label="招待数" md-sort-by="invite">{{ numberOfInvite(item.staff_uid) }}</md-table-cell>
         <!-- <md-table-cell md-label="招待中" md-sort-by="stillInvite">{{ numberOfStillInvite(item.staff_uid) }}</md-table-cell> -->
         <md-table-cell md-label="確定数" md-sort-by="Reservation">{{ numberOfReservation(item.staff_uid) }}</md-table-cell>
