@@ -8,8 +8,9 @@
         <md-table-cell md-label="ゲスト" md-sort-by="guestName">{{ item.guestName }}</md-table-cell>
         <md-table-cell md-label="人数" md-sort-by="email">{{ item.people }}</md-table-cell>
         <md-table-cell md-label="日付" md-sort-by="Date">{{ item.date }}　{{item.time}}〜</md-table-cell>
-        <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell>
-        <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="!item.createdAt"></md-table-cell>
+        <!-- <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell> -->
+        <md-table-cell md-label="招待作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStampOfInviteData(item.inviteId) }}</md-table-cell>
+        <md-table-cell md-label="確定作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStampOfReservationData(item.createdAt) }}</md-table-cell>
         <md-table-cell md-label="" md-sort-by="delete">
           <md-button @click="onModal(item.reservationID)" class="md-raised">削除</md-button>
         </md-table-cell>
@@ -31,7 +32,6 @@ import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
 import router from '@/router'
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'IndividualReservationData',
   data(){
@@ -78,7 +78,7 @@ export default {
     routerPush(router){
       this.$router.push(router)
     },
-    timeStamp(time){
+    timeStampOfReservationData(time){
       let allReservationData = this.$store.getters.allReservationData
       let seconds
       allReservationData.forEach((data) => {
@@ -94,6 +94,23 @@ export default {
       var min  = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
       var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
       return `${year}-${month}-${day} ${hour}:${min}:${sec}` 
+    },
+    timeStampOfInviteData(id){
+      let everyInviteData = this.$store.getters.everyInviteData
+      let seconds
+      everyInviteData.forEach((data) => {
+        if(data.id == id){
+            seconds = data.createdAt.seconds
+        }
+      })
+      var d = new Date( seconds * 1000 );
+      var year  = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day  = d.getDate();
+      var hour = ( d.getHours() < 10 ) ? '0' + d.getHours()   : d.getHours();
+      var min  = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
+      var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+      return year ? `${year}-${month}-${day} ${hour}:${min}:${sec}` : "招待中"
     },
     onModal(inviteID){
       this.modal = true

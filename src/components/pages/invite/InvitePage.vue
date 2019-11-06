@@ -82,6 +82,9 @@
       <!-- /footer -->
     </Modal>
   </div>
+        <div class="loading-overlay" v-if="loading">
+        <md-progress-spinner md-mode="indeterminate" :md-stroke="2"></md-progress-spinner>
+      </div>
 </div>
 </template>
 
@@ -92,6 +95,7 @@ import Firebase from '@/api/firebase/firebase'
 import Firestore from '@/api/firebase/firestore'
 import Modal from '@/components/parts/Modal'
 import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+import axios from 'axios'
 
 // import OAuth from "@/components/OAuth";
 import { mapGetters } from 'vuex'
@@ -130,7 +134,7 @@ export default {
   created: function(){
     // Firebase.onAuth()
     // this.getShopImageURL()
-    // this.loadingOverlay()
+    this.loadingOverlay()
     this.getInviteEachData()
     console.log(document.domain == "localhost")
     this.signInAnonymously()
@@ -224,7 +228,7 @@ export default {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
-      }, 500);
+      }, 2000);
     },
     launchLine(){
     location.href = this.url;

@@ -16,6 +16,7 @@ import { OAuth } from 'oauthio-web'
 import './assets/css/theme.scss'
 import Vuelidate from 'vuelidate'
 import VueAnalytics from 'vue-analytics'
+import axios from 'axios'
 
 
 

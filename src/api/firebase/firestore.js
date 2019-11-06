@@ -400,7 +400,9 @@ export default {
         firestore.collection("invite").onSnapshot(function(querySnapshot) {
             let allInviteDataArray = []
             querySnapshot.forEach(function(doc) {
-                allInviteDataArray.push(doc.data());
+                let documnet = doc.data()
+                documnet.id = doc.id
+                allInviteDataArray.push(documnet);
             });
             // console.log(allInviteDataArray)
             allInviteDataArray.sort(function(a,b){
@@ -417,7 +419,9 @@ export default {
             let allReservationDataArray = []
             let confirmedGuest = 0
             querySnapshot.forEach(function(doc) {
-                allReservationDataArray.push(doc.data());
+                let documnet = doc.data()
+                documnet.id = doc.id
+                allReservationDataArray.push(documnet);
                 confirmedGuest += doc.data().people
             });
             allReservationDataArray.sort(function(a,b){
@@ -435,6 +439,7 @@ export default {
             querySnapshot.forEach(function(doc) {
                 if(uid == doc.data().from_uid){
                     let data = {
+                        'id': doc.id,
                         'date': doc.data().date,
                         'email': doc.data().email,
                         'inviteID': doc.id,
@@ -456,7 +461,6 @@ export default {
                     if(a.createdAt > b.createdAt) return -1;
                     return 0;
                 });
-
             });
             store.dispatch('dataChanged', inviteDataArray)
         });
@@ -467,6 +471,7 @@ export default {
             querySnapshot.forEach(function(doc) {
                 if(uid == doc.data().from_uid){
                     let data = {
+                        'id': doc.id,
                         'date': doc.data().date,
                         'email': doc.data().email,
                         'reservationID': doc.id,

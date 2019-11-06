@@ -15,6 +15,9 @@
             <md-option value=7>July</md-option>
             <md-option value=8>August</md-option>
             <md-option value=9>September</md-option>
+            <md-option value=10>October</md-option>
+            <md-option value=11>November</md-option>
+            <md-option value=12>December</md-option>
           </md-select>
         </md-field>
     <div class="columns">
@@ -37,7 +40,7 @@ export default {
   data(){
     return {
       datacollection: null,
-      month: 9
+      month: 11
     }
   },
   props: {

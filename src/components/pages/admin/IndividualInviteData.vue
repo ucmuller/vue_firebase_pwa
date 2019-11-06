@@ -12,8 +12,9 @@
         <md-table-cell md-label="日付" md-sort-by="Date">{{ item.date }}　{{item.time}}〜</md-table-cell>
         <md-table-cell md-label="Flag" md-sort-by="Flag" v-if="item.inviteFlag == true">招待中</md-table-cell>
         <md-table-cell md-label="Flag" md-sort-by="Flag" v-if="item.inviteFlag == false">確定</md-table-cell>
-        <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStamp(item.createdAt) }}</md-table-cell>
+        <md-table-cell md-label="招待作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStampOfInviteData(item.createdAt) }}</md-table-cell>
         <md-table-cell md-label="作成日" md-sort-by="createdAt" v-if="!item.createdAt"></md-table-cell>
+        <md-table-cell md-label="確定作成日" md-sort-by="createdAt" v-if="item.createdAt">{{ timeStampOfReservationData(item.id) }}</md-table-cell>
         <md-table-cell md-label="" md-sort-by="delete">
           <md-button v-if="item.inviteFlag == true" @click="inviteCompletionByAdmin(item.inviteID, item)" class="md-raised">承認</md-button>
         </md-table-cell>
@@ -87,7 +88,7 @@ export default {
     routerPush(router){
       this.$router.push(router)
     }, 
-    timeStamp(time){
+    timeStampOfInviteData(time){
       let everyInviteData = this.$store.getters.everyInviteData
       let seconds
       everyInviteData.forEach((data) => {
@@ -103,6 +104,23 @@ export default {
       var min  = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
       var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
       return `${year}-${month}-${day} ${hour}:${min}:${sec}` 
+    },
+    timeStampOfReservationData(id){
+      let everyReservationData = this.$store.getters.everyReservationData
+      let seconds
+      everyReservationData.forEach((data) => {
+        if(data.inviteId == id){
+            seconds = data.createdAt.seconds
+        }
+      })
+      var d = new Date( seconds * 1000 );
+      var year  = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day  = d.getDate();
+      var hour = ( d.getHours() < 10 ) ? '0' + d.getHours()   : d.getHours();
+      var min  = ( d.getMinutes() < 10 ) ? '0' + d.getMinutes() : d.getMinutes();
+      var sec   = ( d.getSeconds() < 10 ) ? '0' + d.getSeconds() : d.getSeconds();
+      return year ? `${year}-${month}-${day} ${hour}:${min}:${sec}` : "招待中"
     },
     onModal(inviteID){
       this.modal = true

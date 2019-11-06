@@ -21,7 +21,7 @@ import VueChart from '@/components/chart/VueChart'
       return {
         currentData: {
           selectType: 'staff',
-          selectMonth: 8
+          selectMonth: 11
         },
       }
     },
