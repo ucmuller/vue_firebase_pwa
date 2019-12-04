@@ -1,5 +1,8 @@
 <template>
 <div>
+  <div>
+    <img src="@/assets/img/banner.png" @click="routerPush({name:'ReferralForm',params:{id:user.staff_uid}})" id="bottom-bar-item-ReferralForm" class="banner-area" alt="">
+  </div>
   <div v-if="userStatus" class="bonus-area">
     <div class="content-area">
       <div class="content">
@@ -173,6 +176,10 @@ export default {
 a {
   color: #42b983;
 }
+.banner-area{
+  margin-top: 57px;
+}
+
 .md-card-example{
   padding: 10px;
   padding-bottom: 60px;
@@ -227,7 +234,6 @@ a {
   border:2px #ccc solid;
   height:300px;
   height: 100px;
-  margin-top: 57px;
   background-color: #2979ff;
 }
 

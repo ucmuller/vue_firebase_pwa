@@ -1,4 +1,8 @@
 <template>
+<div>
+  <div>
+    <img src="@/assets/img/banner.png" @click="routerPush({name:'ReferralForm',params:{id:user.staff_uid}})" id="bottom-bar-item-ReferralForm" class="banner-area" alt="">
+  </div>
   <md-card class="md-card" v-if="userStatus && user">
       <!-- <md-card-area md-inset>
         <md-card-media md-ratio="16:9">
@@ -7,71 +11,72 @@
         </md-card-media>
       </md-card-area> -->
 
-      <md-card-content>
-        <div class="invite-card-title">
-          <h2 class="center">代理予約をしてLINEで送信</h2>
-          <p class="form_alert">※LINE送信後、予約が確定すると<br>キャッシュになります。</p>
+    <md-card-content>
+      <div class="invite-card-title">
+        <h2 class="center">代理予約をしてLINEで送信</h2>
+        <p class="form_alert">※LINE送信後、予約が確定すると<br>キャッシュになります。</p>
+      </div>
+      <div class="card-reservation">
+        <div class="md-layout-item">
+        <md-field class="md-field">
+          <md-icon>store</md-icon>
+          <label>店名</label>
+          <md-input v-model="user.shopName"></md-input>
+        </md-field>
+        <!-- <md-field>
+          <label>日付</label>
+          <md-select v-model="data.date" id="date" required>
+            <md-option :value="today">本日:{{today}}</md-option>
+            <md-option :value="tomorrow">明日:{{tomorrow}}</md-option>
+          </md-select>
+        </md-field> -->
+        <md-datepicker v-model="inputDate" md-immediately required>
+          <label>日付*</label>
+        </md-datepicker>
+        <md-field>
+          <md-icon>schedule</md-icon>
+          <label>時間</label>
+          <md-select v-model="data.time" id="time" required>
+            <md-option 
+              v-for="(time, i) in times"
+              :key="i" 
+              :value="time">{{time}}
+            </md-option>
+          </md-select>
+        </md-field>
+        <md-field>
+          <label>ゲスト名</label>
+          <md-input v-model="data.guestName" required></md-input>
+        </md-field>
+        <md-field>
+          <label>人数</label>
+          <md-select v-model="data.people" id="people" required>
+            <md-option 
+              v-for="(people, i) in peoples"
+              :key="i" 
+              :value="people">{{peoplesString[i]}}
+            </md-option>
+          </md-select>
+        </md-field>
+        <md-field>
+          <label>TEL</label>
+          <md-input v-model="data.tel"></md-input>
+        </md-field>
+        <md-field>
+          <label>メッセージ(※自由に編集できます)</label>
+          <md-textarea v-model="data.lineMessage"></md-textarea>
+        </md-field>
         </div>
-        <div class="card-reservation">
-          <div class="md-layout-item">
-          <md-field class="md-field">
-            <md-icon>store</md-icon>
-            <label>店名</label>
-            <md-input v-model="user.shopName"></md-input>
-          </md-field>
-          <!-- <md-field>
-            <label>日付</label>
-            <md-select v-model="data.date" id="date" required>
-              <md-option :value="today">本日:{{today}}</md-option>
-              <md-option :value="tomorrow">明日:{{tomorrow}}</md-option>
-            </md-select>
-          </md-field> -->
-          <md-datepicker v-model="inputDate" md-immediately required>
-            <label>日付*</label>
-          </md-datepicker>
-          <md-field>
-            <md-icon>schedule</md-icon>
-            <label>時間</label>
-            <md-select v-model="data.time" id="time" required>
-              <md-option 
-                v-for="(time, i) in times"
-                :key="i" 
-                :value="time">{{time}}
-              </md-option>
-            </md-select>
-          </md-field>
-          <md-field>
-            <label>ゲスト名</label>
-            <md-input v-model="data.guestName" required></md-input>
-          </md-field>
-          <md-field>
-            <label>人数</label>
-            <md-select v-model="data.people" id="people" required>
-              <md-option 
-                v-for="(people, i) in peoples"
-                :key="i" 
-                :value="people">{{peoplesString[i]}}
-              </md-option>
-            </md-select>
-          </md-field>
-          <md-field>
-            <label>TEL</label>
-            <md-input v-model="data.tel"></md-input>
-          </md-field>
-          <md-field>
-            <label>メッセージ(※自由に編集できます)</label>
-            <md-textarea v-model="data.lineMessage"></md-textarea>
-          </md-field>
-          </div>
-        </div>
-      </md-card-content>
-      <md-button @click="saveInviteData" class="line-button" :disabled="activateSubmit">LINE送信</md-button>
+      </div>
+    </md-card-content>
+    <md-button @click="saveInviteData" class="line-button" :disabled="activateSubmit">LINE送信</md-button>
       <p class="form_alert" v-if="activateSubmit">*の部分は必須入力</p>
         <!-- <router-link :to="{name:'InviteList',params:{id:user.staff_uid}}">InviteList!</router-link> -->
-    </md-card>
+  </md-card>
   <div v-else>
-      <router-link to="/signin">sign in now!</router-link>
+    <router-link to="/signin">sign in now!</router-link>
   </div>
+</div>
 </template>
 
 <script>
@@ -232,7 +237,7 @@ export default {
       // this.$v.$touch()
       location.href = this.url;
     },
-        reject(){
+    reject(){
       if(!this.userStatus){
         this.$router.push("/signin")
       }
@@ -243,8 +248,8 @@ export default {
     getReservationData(){
       Firestore.getReservationData(this.user.staff_uid)
     },
-    test() {
-      console.log(this.data.date)
+    routerPush(router){
+      this.$router.push(router)
     }
   }
 }
@@ -255,6 +260,10 @@ export default {
 
 a {
   color: #42b983;
+}
+
+.banner-area{
+  margin-top: 57px;
 }
 
 .line-button{
@@ -283,7 +292,7 @@ a {
 
 .md-card{
   width: 90%;
-  margin-top: 70px;
+  /* margin-top: 70px; */
   display: inline-block;
   vertical-align: top;
   padding-left: 10px;
