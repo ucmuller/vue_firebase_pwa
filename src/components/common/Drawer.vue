@@ -9,7 +9,7 @@
       <!-- <button v-if="userStatus" @click="test" class="logout-button">info</button> -->
       <!-- <button v-if="userStatus" @click="logout" class="logout-button">logout</button> -->
       <button v-if="user" @click="routerPush('/settings')"><md-icon >settings</md-icon></button>
-      <md-button v-if="!user && !id" @click="routerPush('/signin')">ログインはこちら</md-button>
+      <md-button v-if="!user && !id && this.$route.path == '/signup'" @click="routerPush('/signin')">ログインはこちら</md-button>
     </div>
     </md-toolbar>
   </div>
@@ -35,6 +35,7 @@ export default {
   },
   created: function(){
     // Firebase.onAuth()
+    console.log(this.$route.path)
   },
   computed: {
     ...mapGetters({
