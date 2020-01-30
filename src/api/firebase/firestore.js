@@ -118,7 +118,7 @@ export default {
         });
     },
 
-    saveInviteData(user, data ,documentID){
+    saveInviteData(user, data ,documentID, url){
         firestore.collection("invite").doc(documentID).set({
             'time': data.time,
             'date': data.date,
@@ -137,7 +137,7 @@ export default {
             'createdAt': firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(function() {
-        
+            location.href = url;
         })
         .catch(function(error) {
             console.error("Error writing document: ", error);

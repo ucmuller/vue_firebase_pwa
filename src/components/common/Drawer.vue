@@ -35,7 +35,7 @@ export default {
   },
   created: function(){
     // Firebase.onAuth()
-    console.log(this.$route.path)
+    // console.log(this.$route.path)
   },
   computed: {
     ...mapGetters({

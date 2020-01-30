@@ -40,7 +40,7 @@ export default {
   data(){
     return {
       datacollection: null,
-      month: 11
+      month: 1
     }
   },
   props: {
@@ -97,22 +97,16 @@ export default {
         Data = this.$store.getters.everyReservationData
       }
       Data.forEach((data) => {
-        var d = new Date( data.createdAt.seconds * 1000 );
-        var month = d.getMonth() + 1;
-        var day  = d.getDate();
-        if(month == selectMonth){
-          DateValue[day-1] += 1
+        if(data.createdAt){
+          var d = new Date( data.createdAt.seconds * 1000 );
+          var month = d.getMonth() + 1;
+          var day  = d.getDate();
+          if(month == selectMonth){
+            DateValue[day-1] += 1
+          }
         }
       })
       return DateValue
-    },
-
-    setInitialDateValue(){
-      let initialDateValue = []
-        for(let i = 1; i <= 31; i++){
-          initialDateValue.push(0)
-        }
-      return initialDateValue
     }
   },
   watch: {

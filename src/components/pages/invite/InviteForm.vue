@@ -131,7 +131,6 @@ export default {
     this.getInviteData()
     this.getReservationData()
     this.data.lineMessage = this.$store.getters.user.lineMessage
-    // console.log(this.userStatus)
   },
   computed: {
     ...mapGetters({
@@ -144,15 +143,13 @@ export default {
       peopleOfReservationData: 'peopleOfReservationData'
     }),
     url(){
-      let domain = document.domain
-      console.log(domain)
-      if(domain == "localhost"){
-        // return `https://social-plugins.line.me/lineit/share?url=http://localhost:8080/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
-      } else {
-        // return `https://social-plugins.line.me/lineit/share?url=https://${domain}/invitepage/${this.id}`
-        return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://${domain}/invitepage/${this.documentID}`
-      }
+      // let domain = document.domain
+      return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://rndv-vip.com/${this.documentID}`
+      // if(domain == "localhost"){
+      //   return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttp://localhost:8080/invitepage/${this.documentID}`
+      // } else {
+      //   return `http://line.me/R/msg/text/?${this.data.lineMessage}%0D%0Ahttps://rndv-vip.com/${this.documentID}`
+      // }
     },
     activateSubmit(){
       if(this.data.date != "" && this.data.time != "" && this.data.guestName != "" && this.people != ""){
@@ -224,9 +221,9 @@ export default {
     },
     saveInviteData(){
       this.documentID = this.user.staff_uid + Date.now()
-      Firestore.saveInviteData(this.user, this.data, this.documentID)
+      Firestore.saveInviteData(this.user, this.data, this.documentID, this.url)
       Firestore.changeLineMessageOfStaffData(this.user.staff_uid, this.data)
-      this.launchLine()
+      // this.launchLine()
       router.push({name:'InviteList',params:{id:this.$store.getters.user.staff_uid}})
     },
     getShopImageURL(){
