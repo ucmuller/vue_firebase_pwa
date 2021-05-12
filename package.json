@@ -13,7 +13,7 @@
     "@firebase/app": "^0.3.9",
     "@firebase/auth": "^0.9.3",
     "@firebase/firestore": "^1.0.4",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "chartkick": "^3.1.1",
     "firebase": "^5.8.4",
     "hchs-vue-charts": "^1.2.8",
